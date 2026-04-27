@@ -1,0 +1,33 @@
+# Dati stelle (generati localmente, possono essere grandi)
+webxr/data/stars.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg
+
+# Dati astronomici (HYG, Kepler KOI)
+data/
+*.csv
+*.fits
+*.hdf5
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dipendenze Node (se usi un bundler)
+node_modules/

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMO VR — Exoplanet Atlas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000008; overflow: hidden; font-family: 'Courier New', monospace; }
+
+        #overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 10;
+        }
+
+        #title {
+            position: absolute; top: 22px; left: 26px;
+            color: rgba(180,200,255,0.7); font-size: 13px; letter-spacing: 2px;
+        }
+        #title span { color: rgba(100,130,200,0.5); font-size: 11px; display: block; margin-top: 4px; }
+
+        #star-info {
+            position: absolute; top: 22px; right: 22px;
+            background: rgba(0,0,10,0.85);
+            border: 1px solid rgba(255,200,50,0.35);
+            border-radius: 8px; padding: 16px 20px;
+            color: #ddd; min-width: 240px; display: none;
+            pointer-events: auto;
+        }
+        #star-info .name { color: #FFD700; font-size: 15px; font-weight: bold; margin-bottom: 10px; }
+        #star-info .row { font-size: 12px; color: #aaa; margin: 3px 0; }
+        #star-info .row span { color: #ccc; }
+        #star-info .planet-badge {
+            margin-top: 10px; padding: 8px 10px;
+            background: rgba(255,180,0,0.08);
+            border: 1px solid rgba(255,180,0,0.2);
+            border-radius: 5px; font-size: 12px; color: #FFD700;
+        }
+        #star-info .close-btn {
+            position: absolute; top: 10px; right: 12px;
+            color: #555; cursor: pointer; font-size: 16px;
+        }
+        #star-info .close-btn:hover { color: #aaa; }
+
+        #controls-hint {
+            position: absolute; bottom: 90px; left: 50%;
+            transform: translateX(-50%);
+            color: rgba(100,120,180,0.5); font-size: 11px;
+            letter-spacing: 1px; text-align: center;
+        }
+
+        #legend {
+            position: absolute; bottom: 90px; left: 26px;
+            font-size: 11px; color: rgba(120,130,150,0.7);
+        }
+        #legend .dot {
+            display: inline-block; width: 8px; height: 8px;
+            border-radius: 50%; margin-right: 6px; vertical-align: middle;
+        }
+        #legend .row { margin: 4px 0; }
+
+        #vr-btn {
+            position: absolute; bottom: 28px; left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 36px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(200,210,255,0.85); font-size: 13px;
+            letter-spacing: 2px; cursor: pointer; border-radius: 6px;
+            pointer-events: auto; transition: all 0.2s;
+        }
+        #vr-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); }
+        #vr-btn:disabled { opacity: 0.3; cursor: default; }
+
+        #loading {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(150,170,220,0.6); font-size: 13px; letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <div id="title">
+            COSMO VR — EXOPLANET ATLAS
+            <span>trascina per ruotare &nbsp;|&nbsp; scroll per zoom &nbsp;|&nbsp; click su una stella</span>
+        </div>
+
+        <div id="star-info">
+            <span class="close-btn" id="close-info">&#x2715;</span>
+            <div class="name" id="info-name"></div>
+            <div class="row">RA: <span id="info-ra"></span> &nbsp; Dec: <span id="info-dec"></span></div>
+            <div class="row">Magnitudine: <span id="info-mag"></span></div>
+            <div class="row">Tipo spettrale: <span id="info-spect"></span></div>
+            <div class="planet-badge" id="info-planet" style="display:none">
+                <div id="info-planet-count"></div>
+                <div id="info-planet-score" style="color:#aaa;font-size:11px;margin-top:3px"></div>
+            </div>
+        </div>
+
+        <div id="legend">
+            <div class="row"><span class="dot" style="background:#FFD700"></span>1 esopianeta</div>
+            <div class="row"><span class="dot" style="background:#FF8C00"></span>2–3 esopianeti</div>
+            <div class="row"><span class="dot" style="background:#FF3300"></span>4+ esopianeti</div>
+        </div>
+
+        <div id="controls-hint">
+            QUEST 2: grilletto per selezionare &nbsp;|&nbsp; joystick per ruotare
+        </div>
+
+        <button id="vr-btn">ENTRA IN VR</button>
+    </div>
+
+    <div id="loading">CARICAMENTO COSMO...</div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
