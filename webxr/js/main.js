@@ -1,8 +1,10 @@
 import * as THREE from 'three';
-import { OrbitControls }            from 'three/addons/controls/OrbitControls.js';
-import { createStarfield }          from './starfield.js';
-import { setupControllers, pollGamepads } from './controllers.js';
-import { generateDemoStars }        from './demo_data.js';
+import { OrbitControls }                       from 'three/addons/controls/OrbitControls.js';
+import { createStarfield }                     from './starfield.js';
+import { setupControllers, pollGamepads, pollHover } from './controllers.js';
+import { generateDemoStars }                   from './demo_data.js';
+import { createMilkyWay }                      from './milkyway.js';
+import { createConstellations }                from './constellations.js';
 
 const SPHERE_RADIUS = 500;
 const DATA_URL      = './data/stars.json';
@@ -51,6 +53,12 @@ async function init() {
     starfield = createStarfield(stars, SPHERE_RADIUS);
     scene.add(starfield.group);
 
+    // Via Lattea
+    scene.add(createMilkyWay(SPHERE_RADIUS));
+
+    // Costellazioni
+    scene.add(createConstellations(SPHERE_RADIUS));
+
     // Pannello info 3D (VR)
     infoPanel = createInfoPanel();
     scene.add(infoPanel.group);
@@ -62,8 +70,9 @@ async function init() {
     // VR button
     initVRButton();
 
-    // Raycasting desktop
+    // Raycasting desktop — click e hover
     renderer.domElement.addEventListener('click', onMouseClick);
+    renderer.domElement.addEventListener('mousemove', onMouseMove);
     document.getElementById('close-info').addEventListener('click', () => onStarSelected(null));
 
     window.addEventListener('resize', onResize);
@@ -197,9 +206,11 @@ function onStarSelected(star) {
 }
 
 // ─── Raycasting desktop ───────────────────────────────────────────────────────
-const _mouse    = new THREE.Vector2();
+const _mouse     = new THREE.Vector2();
 const _raycaster = new THREE.Raycaster();
 _raycaster.params.Points = { threshold: 3 };
+
+let _hoverThrottle = 0;
 
 function onMouseClick(e) {
     if (!starfield) return;
@@ -212,6 +223,23 @@ function onMouseClick(e) {
         const star = starfield.getStarByHit(hits[0]);
         if (star) onStarSelected(star);
     }
+}
+
+function onMouseMove(e) {
+    if (!starfield) return;
+    // Throttle: non ogni pixel
+    if (++_hoverThrottle % 3 !== 0) return;
+
+    _mouse.x =  (e.clientX / innerWidth)  * 2 - 1;
+    _mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+    _raycaster.setFromCamera(_mouse, camera);
+
+    const hits = _raycaster.intersectObjects([starfield.normalPoints, starfield.hostMesh], false);
+    const hit  = hits.length > 0 ? hits[0] : null;
+    const star = starfield.setHover(hit);
+
+    // Cambia il cursore quando si è sopra una stella
+    renderer.domElement.style.cursor = star ? 'pointer' : 'default';
 }
 
 // ─── VR Button ───────────────────────────────────────────────────────────────
@@ -245,6 +273,15 @@ function initVRButton() {
 // ─── Loop di animazione ──────────────────────────────────────────────────────
 function animate(t, frame) {
     controls.update();
+
+    const elapsed = clock.getElapsedTime();
+
+    // Pulse halo + hover ring
+    if (starfield) {
+        starfield.update(elapsed);
+        // Hover VR: controller destro
+        pollHover(renderer.xr, () => starfield, hit => starfield.setHover(hit));
+    }
 
     // Joystick Quest 2 → ruota la sfera
     if (starfield) pollGamepads(renderer.xr, starfield.group);

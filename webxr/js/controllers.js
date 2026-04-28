@@ -7,6 +7,12 @@ const TMP_DIR    = new THREE.Vector3();
 const RAYCASTER  = new THREE.Raycaster();
 RAYCASTER.params.Points = { threshold: 6 };
 
+const HOVER_RAYCASTER = new THREE.Raycaster();
+HOVER_RAYCASTER.params.Points = { threshold: 6 };
+
+// Riferimenti ai controller per hover polling
+const _controllers = [];
+
 // Geometria del raggio visivo del controller
 const RAY_GEO = new THREE.BufferGeometry().setFromPoints([
     new THREE.Vector3(0, 0, 0),
@@ -21,6 +27,7 @@ export function setupControllers(renderer, scene, getStarfield, onSelect) {
 
     for (let i = 0; i < 2; i++) {
         const controller = renderer.xr.getController(i);
+        _controllers[i] = controller;
         controller.add(new THREE.Line(RAY_GEO, RAY_MAT));
         scene.add(controller);
 
@@ -50,6 +57,27 @@ export function setupControllers(renderer, scene, getStarfield, onSelect) {
         // Squeeze (grip button) → chiude pannello info
         controller.addEventListener('squeezestart', () => onSelect(null));
     }
+}
+
+/**
+ * Polling hover in VR — usa il controller destro (indice 1).
+ * Chiamato ogni frame nel loop di animazione.
+ */
+export function pollHover(xr, getStarfield, onHover) {
+    if (!xr.isPresenting) return;
+    const ctrl = _controllers[1]; // controller destro
+    if (!ctrl?.matrixWorld) return;
+
+    TMP_MATRIX.identity().extractRotation(ctrl.matrixWorld);
+    TMP_ORIGIN.setFromMatrixPosition(ctrl.matrixWorld);
+    TMP_DIR.set(0, 0, -1).applyMatrix4(TMP_MATRIX);
+    HOVER_RAYCASTER.set(TMP_ORIGIN, TMP_DIR);
+
+    const sf = getStarfield();
+    if (!sf) return;
+
+    const hits = HOVER_RAYCASTER.intersectObjects([sf.normalPoints, sf.hostMesh], false);
+    onHover(hits.length > 0 ? hits[0] : null);
 }
 
 // Polling del gamepad per il joystick (chiamato nel loop di animazione)

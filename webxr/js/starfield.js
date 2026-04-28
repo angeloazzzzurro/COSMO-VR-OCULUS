@@ -117,5 +117,54 @@ export function createStarfield(stars, radius) {
         return null;
     }
 
-    return { group, normalPoints, hostMesh, haloMesh, normalStars, hostStars, getStarByHit };
+    // ── Hover ring ────────────────────────────────────────────────────────────
+    const hoverRing = new THREE.Mesh(
+        new THREE.RingGeometry(1.0, 1.55, 40),
+        new THREE.MeshBasicMaterial({
+            color: 0xffffff, transparent: true, opacity: 0.55,
+            side: THREE.DoubleSide, depthWrite: false,
+            blending: THREE.AdditiveBlending
+        })
+    );
+    hoverRing.visible = false;
+    group.add(hoverRing);
+
+    // ── Animazione pulse (chiamata ogni frame) ────────────────────────────────
+    function update(time) {
+        // Il gruppo halo respira con una scala globale
+        const pulse = 1 + 0.18 * Math.sin(time * 1.7);
+        haloMesh.scale.setScalar(pulse);
+
+        // Il ring hover pulsa leggermente con frequenza diversa
+        if (hoverRing.visible) {
+            hoverRing.material.opacity = 0.4 + 0.25 * Math.sin(time * 3.5);
+        }
+    }
+
+    // ── Hover: posiziona il ring sul bersaglio ────────────────────────────────
+    function setHover(hit) {
+        if (!hit) { hoverRing.visible = false; return null; }
+        const star = getStarByHit(hit);
+        if (!star) { hoverRing.visible = false; return null; }
+
+        const pos = new THREE.Vector3(star.x, star.y, star.z).multiplyScalar(radius);
+        hoverRing.position.copy(pos);
+        hoverRing.lookAt(0, 0, 0); // sempre rivolto verso il centro (dove si trova la camera)
+
+        // Scala il ring in base alla dimensione della stella
+        const s = star.has_planet
+            ? Math.max(0.6, Math.min(5.0, 6.5 - star.mag)) * 5.5
+            : Math.max(0.4, Math.min(5.0, 6.5 - star.mag)) * 3.0;
+        hoverRing.scale.setScalar(Math.max(4, s));
+        hoverRing.visible = true;
+        return star;
+    }
+
+    function clearHover() { hoverRing.visible = false; }
+
+    return {
+        group, normalPoints, hostMesh, haloMesh,
+        normalStars, hostStars,
+        getStarByHit, update, setHover, clearHover
+    };
 }
