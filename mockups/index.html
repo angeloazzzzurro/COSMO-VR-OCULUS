@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COSMO VR — UX/UI Mockups</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#05050f; color:#ccc; font-family:'Courier New',monospace; }
+
+  header {
+    padding: 40px 60px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  header h1 { color:#aabfff; font-size:22px; letter-spacing:4px; }
+  header p  { color:#555; font-size:12px; margin-top:6px; letter-spacing:2px; }
+
+  nav {
+    display:flex; gap:0; padding:0 60px;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    overflow-x:auto;
+  }
+  nav button {
+    background:none; border:none; border-bottom:2px solid transparent;
+    color:#555; padding:14px 22px; cursor:pointer; font-family:inherit;
+    font-size:11px; letter-spacing:2px; white-space:nowrap; transition:all 0.2s;
+  }
+  nav button:hover    { color:#aaa; }
+  nav button.active   { color:#aabfff; border-bottom-color:#aabfff; }
+
+  .screen { display:none; padding:50px 60px 80px; }
+  .screen.active { display:block; }
+
+  .screen h2 {
+    font-size:13px; letter-spacing:3px; color:#aabfff;
+    margin-bottom:8px;
+  }
+  .screen .desc {
+    font-size:11px; color:#444; margin-bottom:36px; letter-spacing:1px;
+  }
+
+  svg { display:block; }
+
+  .mockup-wrap {
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:10px; overflow:hidden;
+    box-shadow:0 0 60px rgba(100,130,255,0.04);
+  }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+  @media(max-width:900px){ .two-col{ grid-template-columns:1fr; } }
+
+  .label-chip {
+    display:inline-block; margin-bottom:10px;
+    padding:4px 12px; border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px; font-size:10px; color:#667; letter-spacing:2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>COSMO VR — EXOPLANET ATLAS</h1>
+  <p>UX / UI MOCKUPS &nbsp;·&nbsp; OCULUS QUEST 2 &nbsp;·&nbsp; THREE.JS + WEBXR</p>
+</header>
+
+<nav>
+  <button class="active" onclick="show('desktop',this)">01 DESKTOP VIEW</button>
+  <button onclick="show('vr',this)">02 VR SPHERE VIEW</button>
+  <button onclick="show('panel',this)">03 INFO PANEL VR</button>
+  <button onclick="show('controller',this)">04 CONTROLLER MAPPING</button>
+  <button onclick="show('flow',this)">05 USER FLOW</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ 01 DESKTOP -->
+<div id="desktop" class="screen active">
+  <h2>01 — DESKTOP / MOBILE VIEW</h2>
+  <p class="desc">Visualizzazione da browser desktop. Sfera celeste 3D, stelle colorate per tipo spettrale, sistemi con esopianeti evidenziati.</p>
+  <div class="mockup-wrap">
+  <svg viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#000008">
+    <defs>
+      <radialGradient id="bg1" cx="50%" cy="50%" r="70%">
+        <stop offset="0%"   stop-color="#0a0820" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#000008" stop-opacity="1"/>
+      </radialGradient>
+      <radialGradient id="glow_gold" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FFD700" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="glow_orange" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FF8C00" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#FF8C00" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="glow_red" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FF3300" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#FF3300" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="blur_sm"><feGaussianBlur stdDeviation="2"/></filter>
+      <filter id="blur_md"><feGaussianBlur stdDeviation="5"/></filter>
+    </defs>
+
+    <!-- sfondo -->
+    <rect width="1200" height="680" fill="url(#bg1)"/>
+
+    <!-- nebulosa sfondo -->
+    <ellipse cx="600" cy="340" rx="500" ry="300" fill="#0d0830" opacity="0.4"/>
+    <ellipse cx="350" cy="200" rx="200" ry="120" fill="#0a0525" opacity="0.3"/>
+
+    <!-- stelle di sfondo (piccole) -->
+    <g fill="#ffffff" opacity="0.6">
+      <circle cx="80"  cy="55"  r="0.8"/><circle cx="145" cy="90"  r="0.6"/>
+      <circle cx="220" cy="40"  r="1.0"/><circle cx="310" cy="75"  r="0.7"/>
+      <circle cx="420" cy="30"  r="0.8"/><circle cx="530" cy="60"  r="0.6"/>
+      <circle cx="640" cy="45"  r="1.0"/><circle cx="720" cy="80"  r="0.7"/>
+      <circle cx="830" cy="35"  r="0.8"/><circle cx="950" cy="65"  r="0.9"/>
+      <circle cx="1050" cy="45" r="0.6"/><circle cx="1130" cy="90" r="0.8"/>
+      <circle cx="100" cy="160" r="0.7"/><circle cx="180" cy="200" r="1.0"/>
+      <circle cx="280" cy="150" r="0.6"/><circle cx="370" cy="185" r="0.8"/>
+      <circle cx="490" cy="170" r="0.7"/><circle cx="580" cy="130" r="0.9"/>
+      <circle cx="670" cy="165" r="0.6"/><circle cx="770" cy="145" r="0.8"/>
+      <circle cx="880" cy="190" r="0.7"/><circle cx="1000" cy="155" r="1.0"/>
+      <circle cx="1100" cy="175" r="0.7"/><circle cx="1160" cy="135" r="0.6"/>
+      <circle cx="60"  cy="280" r="0.9"/><circle cx="150" cy="310" r="0.7"/>
+      <circle cx="240" cy="265" r="0.8"/><circle cx="320" cy="300" r="1.0"/>
+      <circle cx="440" cy="270" r="0.6"/><circle cx="550" cy="295" r="0.8"/>
+      <circle cx="660" cy="255" r="0.7"/><circle cx="760" cy="280" r="0.9"/>
+      <circle cx="860" cy="310" r="0.6"/><circle cx="960" cy="260" r="0.8"/>
+      <circle cx="1060" cy="295" r="0.7"/><circle cx="1150" cy="270" r="1.0"/>
+      <circle cx="90"  cy="400" r="0.8"/><circle cx="170" cy="430" r="0.6"/>
+      <circle cx="260" cy="395" r="0.9"/><circle cx="340" cy="425" r="0.7"/>
+      <circle cx="450" cy="410" r="0.8"/><circle cx="560" cy="390" r="0.6"/>
+      <circle cx="650" cy="420" r="1.0"/><circle cx="750" cy="400" r="0.7"/>
+      <circle cx="840" cy="435" r="0.8"/><circle cx="940" cy="405" r="0.9"/>
+      <circle cx="1040" cy="420" r="0.6"/><circle cx="1140" cy="395" r="0.8"/>
+      <circle cx="70"  cy="520" r="0.7"/><circle cx="160" cy="545" r="1.0"/>
+      <circle cx="250" cy="510" r="0.6"/><circle cx="350" cy="540" r="0.8"/>
+      <circle cx="460" cy="525" r="0.7"/><circle cx="565" cy="510" r="0.9"/>
+      <circle cx="665" cy="535" r="0.6"/><circle cx="775" cy="520" r="0.8"/>
+      <circle cx="870" cy="550" r="0.7"/><circle cx="970" cy="515" r="1.0"/>
+      <circle cx="1070" cy="535" r="0.8"/><circle cx="1160" cy="510" r="0.6"/>
+      <circle cx="115" cy="610" r="0.8"/><circle cx="200" cy="635" r="0.7"/>
+      <circle cx="300" cy="615" r="0.9"/><circle cx="400" cy="640" r="0.6"/>
+      <circle cx="510" cy="620" r="0.8"/><circle cx="600" cy="605" r="0.7"/>
+      <circle cx="700" cy="630" r="1.0"/><circle cx="800" cy="610" r="0.6"/>
+      <circle cx="900" cy="640" r="0.8"/><circle cx="990" cy="615" r="0.7"/>
+      <circle cx="1090" cy="635" r="0.9"/><circle cx="1175" cy="615" r="0.8"/>
+    </g>
+
+    <!-- stelle con colore spettrale -->
+    <circle cx="195" cy="340" r="2.8" fill="#9bb0ff" opacity="0.9"/>
+    <circle cx="430" cy="210" r="3.5" fill="#aabfff" opacity="0.85"/>
+    <circle cx="560" cy="480" r="2.5" fill="#f8f7ff" opacity="0.8"/>
+    <circle cx="700" cy="160" r="3.2" fill="#fff4ea" opacity="0.85"/>
+    <circle cx="840" cy="390" r="2.8" fill="#ffd2a1" opacity="0.8"/>
+    <circle cx="320" cy="490" r="2.2" fill="#ffcc6f" opacity="0.75"/>
+    <circle cx="980" cy="220" r="3.0" fill="#cad7ff" opacity="0.85"/>
+    <circle cx="750" cy="520" r="2.5" fill="#f8f7ff" opacity="0.8"/>
+    <circle cx="130" cy="470" r="3.8" fill="#ffcc6f" opacity="0.9"/>
+    <circle cx="1050" cy="450" r="2.6" fill="#ffd2a1" opacity="0.8"/>
+
+    <!-- Sirius - stella brillante -->
+    <circle cx="195" cy="340" r="14" fill="url(#glow_gold)" filter="url(#blur_sm)" opacity="0"/>
+    <circle cx="195" cy="340" r="4.5" fill="#cad7ff"/>
+    <text x="202" y="333" fill="#6680aa" font-size="9" font-family="Courier New">Sirius</text>
+
+    <!-- Betelgeuse -->
+    <circle cx="130" cy="470" r="5.2" fill="#ffcc6f"/>
+    <text x="137" y="463" fill="#6680aa" font-size="9" font-family="Courier New">Betelgeuse</text>
+
+    <!-- Esopianeta 1 pianeta (oro) -->
+    <circle cx="620" cy="320" r="28" fill="url(#glow_gold)" filter="url(#blur_md)"/>
+    <circle cx="620" cy="320" r="9" fill="#FFD700"/>
+    <text x="632" y="313" fill="#FFD700" font-size="9.5" font-family="Courier New" opacity="0.85">Kepler-452</text>
+
+    <!-- Esopianeta 3 pianeti (arancio) -->
+    <circle cx="480" cy="380" r="24" fill="url(#glow_orange)" filter="url(#blur_md)"/>
+    <circle cx="480" cy="380" r="7.5" fill="#FF8C00"/>
+    <text x="492" y="373" fill="#FF8C00" font-size="9.5" font-family="Courier New" opacity="0.85">55 Cancri</text>
+
+    <!-- TRAPPIST-1: 7 pianeti (rosso) -->
+    <circle cx="860" cy="270" r="30" fill="url(#glow_red)" filter="url(#blur_md)"/>
+    <circle cx="860" cy="270" r="10" fill="#FF3300"/>
+    <text x="873" y="263" fill="#FF3300" font-size="9.5" font-family="Courier New" opacity="0.85">TRAPPIST-1</text>
+    <text x="873" y="276" fill="#FF3300" font-size="8" font-family="Courier New" opacity="0.6">7 pianeti</text>
+
+    <!-- Kepler-186 (arancio) -->
+    <circle cx="350" cy="310" r="22" fill="url(#glow_orange)" filter="url(#blur_md)"/>
+    <circle cx="350" cy="310" r="7" fill="#FF8C00"/>
+    <text x="362" y="303" fill="#FF8C00" font-size="9.5" font-family="Courier New" opacity="0.85">Kepler-186</text>
+
+    <!-- Kepler-22 (oro) -->
+    <circle cx="960" cy="420" r="22" fill="url(#glow_gold)" filter="url(#blur_md)"/>
+    <circle cx="960" cy="420" r="7" fill="#FFD700"/>
+    <text x="972" y="413" fill="#FFD700" font-size="9.5" font-family="Courier New" opacity="0.85">Kepler-22</text>
+
+    <!-- tau Ceti (arancio) -->
+    <circle cx="720" cy="450" r="20" fill="url(#glow_orange)" filter="url(#blur_md)"/>
+    <circle cx="720" cy="450" r="6.5" fill="#FF8C00"/>
+    <text x="730" y="442" fill="#FF8C00" font-size="9.5" font-family="Courier New" opacity="0.85">tau Ceti</text>
+
+    <!-- UI OVERLAY ─────────────────────────────────── -->
+
+    <!-- Titolo top-left -->
+    <text x="28" y="36" fill="#aabfff" font-size="13" font-family="Courier New" letter-spacing="3" opacity="0.8">COSMO VR — EXOPLANET ATLAS</text>
+    <text x="28" y="52" fill="#334" font-size="10" font-family="Courier New" letter-spacing="2">TRASCINA PER RUOTARE  |  SCROLL PER ZOOM  |  CLICK SU UNA STELLA</text>
+
+    <!-- Pannello info stella (top-right) — TRAPPIST-1 selezionata -->
+    <rect x="870" y="20" width="300" height="175" rx="8" fill="rgba(0,0,10,0.88)" stroke="#FFD70055" stroke-width="1"/>
+    <!-- close x -->
+    <text x="1152" y="40" fill="#444" font-size="14" font-family="Courier New">✕</text>
+    <!-- nome -->
+    <text x="888" y="54" fill="#FFD700" font-size="14" font-family="Courier New" font-weight="bold">TRAPPIST-1</text>
+    <!-- dati -->
+    <text x="888" y="76" fill="#888" font-size="10" font-family="Courier New">RA: 346.62°   Dec: -5.04°</text>
+    <text x="888" y="93" fill="#888" font-size="10" font-family="Courier New">Magnitudine: 18.80</text>
+    <text x="888" y="110" fill="#888" font-size="10" font-family="Courier New">Tipo spettrale: M</text>
+    <!-- badge pianeti -->
+    <rect x="878" y="123" width="272" height="56" rx="5" fill="#FFD70010" stroke="#FFD70030" stroke-width="1"/>
+    <text x="893" y="143" fill="#FFD700" font-size="12" font-family="Courier New">7 esopianeti</text>
+    <text x="893" y="163" fill="#888" font-size="10" font-family="Courier New">Confidence: 100.0%</text>
+
+    <!-- Legenda bottom-left -->
+    <rect x="22" y="592" width="200" height="72" rx="6" fill="rgba(0,0,8,0.6)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <circle cx="40" cy="613" r="5" fill="#FFD700"/>
+    <text x="52" y="617" fill="#777" font-size="10" font-family="Courier New">1 esopianeta</text>
+    <circle cx="40" cy="633" r="5" fill="#FF8C00"/>
+    <text x="52" y="637" fill="#777" font-size="10" font-family="Courier New">2–3 esopianeti</text>
+    <circle cx="40" cy="653" r="5" fill="#FF3300"/>
+    <text x="52" y="657" fill="#777" font-size="10" font-family="Courier New">4+ esopianeti</text>
+
+    <!-- Bottone VR bottom-center -->
+    <rect x="488" y="626" width="224" height="40" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+    <text x="600" y="651" fill="rgba(200,210,255,0.85)" font-size="12" font-family="Courier New" text-anchor="middle" letter-spacing="3">ENTRA IN VR</text>
+
+    <!-- Hint controller bottom-center -->
+    <text x="600" y="617" fill="rgba(100,120,180,0.5)" font-size="9" font-family="Courier New" text-anchor="middle" letter-spacing="1">QUEST 2: GRILLETTO PER SELEZIONARE  |  JOYSTICK PER RUOTARE</text>
+  </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ 02 VR SPHERE -->
+<div id="vr" class="screen">
+  <h2>02 — VR INSIDE THE SPHERE</h2>
+  <p class="desc">Vista dall'interno della sfera celeste sul Quest 2. La testa ruota il campo visivo. Controller sinistro in basso a sinistra con raggio visivo.</p>
+  <div class="mockup-wrap">
+  <svg viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#000005">
+    <defs>
+      <radialGradient id="vr_bg" cx="50%" cy="50%" r="60%">
+        <stop offset="0%"   stop-color="#080520"/>
+        <stop offset="100%" stop-color="#000005"/>
+      </radialGradient>
+      <radialGradient id="vr_gold" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FFD700" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="vr_red" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#FF3300" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#FF3300" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="vr_blue" cx="50%" cy="50%" r="50%">
+        <stop offset="0%"   stop-color="#4466ff" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#4466ff" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="fblur2"><feGaussianBlur stdDeviation="3"/></filter>
+      <filter id="fblur6"><feGaussianBlur stdDeviation="6"/></filter>
+      <clipPath id="vrclip">
+        <rect width="1200" height="680"/>
+      </clipPath>
+    </defs>
+
+    <rect width="1200" height="680" fill="url(#vr_bg)"/>
+
+    <!-- Linea orizzonte VR sottile -->
+    <line x1="0" y1="340" x2="1200" y2="340" stroke="rgba(80,100,150,0.06)" stroke-width="1"/>
+
+    <!-- stelle di sfondo dense -->
+    <g fill="#ffffff" clip-path="url(#vrclip)">
+      <!-- riga 1 -->
+      <circle cx="45"  cy="28"  r="0.8" opacity="0.7"/><circle cx="118" cy="15"  r="0.6" opacity="0.5"/>
+      <circle cx="192" cy="42"  r="1.1" opacity="0.8"/><circle cx="267" cy="8"   r="0.7" opacity="0.6"/>
+      <circle cx="340" cy="55"  r="0.9" opacity="0.7"/><circle cx="415" cy="22"  r="0.6" opacity="0.5"/>
+      <circle cx="490" cy="38"  r="1.0" opacity="0.8"/><circle cx="565" cy="12"  r="0.7" opacity="0.6"/>
+      <circle cx="640" cy="48"  r="0.8" opacity="0.7"/><circle cx="715" cy="25"  r="1.1" opacity="0.8"/>
+      <circle cx="790" cy="40"  r="0.6" opacity="0.5"/><circle cx="865" cy="18"  r="0.9" opacity="0.7"/>
+      <circle cx="940" cy="52"  r="0.7" opacity="0.6"/><circle cx="1015" cy="30" r="1.0" opacity="0.8"/>
+      <circle cx="1090" cy="45" r="0.8" opacity="0.7"/><circle cx="1165" cy="20" r="0.6" opacity="0.5"/>
+      <!-- riga 2 -->
+      <circle cx="75"  cy="95"  r="0.9" opacity="0.6"/><circle cx="148" cy="110" r="0.7" opacity="0.7"/>
+      <circle cx="225" cy="82"  r="1.0" opacity="0.8"/><circle cx="298" cy="120" r="0.6" opacity="0.5"/>
+      <circle cx="375" cy="98"  r="0.8" opacity="0.7"/><circle cx="450" cy="75"  r="1.1" opacity="0.8"/>
+      <circle cx="525" cy="112" r="0.7" opacity="0.6"/><circle cx="598" cy="88"  r="0.9" opacity="0.7"/>
+      <circle cx="672" cy="105" r="0.6" opacity="0.5"/><circle cx="748" cy="78"  r="1.0" opacity="0.8"/>
+      <circle cx="820" cy="115" r="0.8" opacity="0.7"/><circle cx="895" cy="92"  r="0.7" opacity="0.6"/>
+      <circle cx="968" cy="108" r="1.1" opacity="0.8"/><circle cx="1044" cy="82" r="0.6" opacity="0.5"/>
+      <circle cx="1118" cy="98" r="0.9" opacity="0.7"/><circle cx="1185" cy="115" r="0.8" opacity="0.7"/>
+      <!-- righe 3-10 sparse -->
+      <circle cx="55"  cy="175" r="0.8" opacity="0.6"/><circle cx="135" cy="195" r="1.0" opacity="0.8"/>
+      <circle cx="210" cy="160" r="0.6" opacity="0.5"/><circle cx="285" cy="188" r="0.7" opacity="0.6"/>
+      <circle cx="365" cy="172" r="0.9" opacity="0.7"/><circle cx="440" cy="158" r="0.6" opacity="0.5"/>
+      <circle cx="515" cy="185" r="1.1" opacity="0.8"/><circle cx="590" cy="168" r="0.7" opacity="0.6"/>
+      <circle cx="665" cy="192" r="0.8" opacity="0.7"/><circle cx="740" cy="163" r="1.0" opacity="0.8"/>
+      <circle cx="815" cy="180" r="0.6" opacity="0.5"/><circle cx="890" cy="170" r="0.9" opacity="0.7"/>
+      <circle cx="962" cy="188" r="0.7" opacity="0.6"/><circle cx="1038" cy="162" r="1.0" opacity="0.8"/>
+      <circle cx="1112" cy="178" r="0.8" opacity="0.7"/><circle cx="1182" cy="192" r="0.6" opacity="0.5"/>
+      <circle cx="95"  cy="258" r="0.9" opacity="0.7"/><circle cx="170" cy="275" r="0.7" opacity="0.6"/>
+      <circle cx="248" cy="245" r="1.0" opacity="0.8"/><circle cx="322" cy="268" r="0.6" opacity="0.5"/>
+      <circle cx="398" cy="255" r="0.8" opacity="0.7"/><circle cx="472" cy="242" r="1.1" opacity="0.8"/>
+      <circle cx="548" cy="272" r="0.7" opacity="0.6"/><circle cx="622" cy="250" r="0.9" opacity="0.7"/>
+      <circle cx="698" cy="265" r="0.6" opacity="0.5"/><circle cx="772" cy="248" r="1.0" opacity="0.8"/>
+      <circle cx="848" cy="270" r="0.8" opacity="0.7"/><circle cx="922" cy="255" r="0.7" opacity="0.6"/>
+      <circle cx="998" cy="268" r="1.1" opacity="0.8"/><circle cx="1072" cy="245" r="0.6" opacity="0.5"/>
+      <circle cx="1148" cy="260" r="0.9" opacity="0.7"/>
+      <circle cx="65"  cy="355" r="0.8" opacity="0.6"/><circle cx="142" cy="368" r="1.0" opacity="0.8"/>
+      <circle cx="218" cy="342" r="0.6" opacity="0.5"/><circle cx="292" cy="372" r="0.7" opacity="0.6"/>
+      <circle cx="368" cy="358" r="0.9" opacity="0.7"/><circle cx="442" cy="345" r="0.6" opacity="0.5"/>
+      <circle cx="518" cy="365" r="1.1" opacity="0.8"/><circle cx="592" cy="352" r="0.7" opacity="0.6"/>
+      <circle cx="668" cy="375" r="0.8" opacity="0.7"/><circle cx="742" cy="348" r="1.0" opacity="0.8"/>
+      <circle cx="818" cy="362" r="0.6" opacity="0.5"/><circle cx="892" cy="355" r="0.9" opacity="0.7"/>
+      <circle cx="968" cy="370" r="0.7" opacity="0.6"/><circle cx="1042" cy="345" r="1.0" opacity="0.8"/>
+      <circle cx="1118" cy="360" r="0.8" opacity="0.7"/><circle cx="1185" cy="372" r="0.6" opacity="0.5"/>
+      <circle cx="88"  cy="435" r="0.9" opacity="0.7"/><circle cx="162" cy="452" r="0.7" opacity="0.6"/>
+      <circle cx="238" cy="428" r="1.0" opacity="0.8"/><circle cx="312" cy="448" r="0.6" opacity="0.5"/>
+      <circle cx="388" cy="438" r="0.8" opacity="0.7"/><circle cx="462" cy="422" r="1.1" opacity="0.8"/>
+      <circle cx="538" cy="448" r="0.7" opacity="0.6"/><circle cx="612" cy="432" r="0.9" opacity="0.7"/>
+      <circle cx="688" cy="445" r="0.6" opacity="0.5"/><circle cx="762" cy="428" r="1.0" opacity="0.8"/>
+      <circle cx="838" cy="442" r="0.8" opacity="0.7"/><circle cx="912" cy="432" r="0.7" opacity="0.6"/>
+      <circle cx="988" cy="450" r="1.1" opacity="0.8"/><circle cx="1062" cy="425" r="0.6" opacity="0.5"/>
+      <circle cx="1138" cy="438" r="0.9" opacity="0.7"/>
+      <circle cx="55"  cy="515" r="0.8" opacity="0.6"/><circle cx="130" cy="532" r="1.0" opacity="0.8"/>
+      <circle cx="205" cy="510" r="0.6" opacity="0.5"/><circle cx="280" cy="528" r="0.7" opacity="0.6"/>
+      <circle cx="355" cy="518" r="0.9" opacity="0.7"/><circle cx="430" cy="505" r="0.6" opacity="0.5"/>
+      <circle cx="505" cy="525" r="1.1" opacity="0.8"/><circle cx="580" cy="512" r="0.7" opacity="0.6"/>
+      <circle cx="655" cy="530" r="0.8" opacity="0.7"/><circle cx="730" cy="508" r="1.0" opacity="0.8"/>
+      <circle cx="805" cy="522" r="0.6" opacity="0.5"/><circle cx="880" cy="515" r="0.9" opacity="0.7"/>
+      <circle cx="955" cy="528" r="0.7" opacity="0.6"/><circle cx="1030" cy="505" r="1.0" opacity="0.8"/>
+      <circle cx="1105" cy="520" r="0.8" opacity="0.7"/><circle cx="1175" cy="532" r="0.6" opacity="0.5"/>
+      <circle cx="78"  cy="600" r="0.9" opacity="0.7"/><circle cx="155" cy="618" r="0.7" opacity="0.6"/>
+      <circle cx="232" cy="595" r="1.0" opacity="0.8"/><circle cx="308" cy="612" r="0.6" opacity="0.5"/>
+      <circle cx="385" cy="602" r="0.8" opacity="0.7"/><circle cx="460" cy="588" r="1.1" opacity="0.8"/>
+      <circle cx="535" cy="615" r="0.7" opacity="0.6"/><circle cx="610" cy="598" r="0.9" opacity="0.7"/>
+      <circle cx="685" cy="610" r="0.6" opacity="0.5"/><circle cx="760" cy="592" r="1.0" opacity="0.8"/>
+      <circle cx="835" cy="608" r="0.8" opacity="0.7"/><circle cx="910" cy="598" r="0.7" opacity="0.6"/>
+      <circle cx="985" cy="615" r="1.1" opacity="0.8"/><circle cx="1060" cy="588" r="0.6" opacity="0.5"/>
+      <circle cx="1135" cy="605" r="0.9" opacity="0.7"/><circle cx="1185" cy="618" r="0.8" opacity="0.7"/>
+    </g>
+
+    <!-- Stelle brillanti colorate -->
+    <circle cx="280" cy="180" r="3.8" fill="#ffcc6f" opacity="0.9"/>
+    <circle cx="920" cy="140" r="3.2" fill="#aabfff" opacity="0.85"/>
+    <circle cx="150" cy="420" r="4.2" fill="#fff4ea" opacity="0.85"/>
+    <circle cx="1050" cy="380" r="3.5" fill="#ffd2a1" opacity="0.8"/>
+    <circle cx="580" cy="80"  r="3.0" fill="#9bb0ff" opacity="0.9"/>
+    <circle cx="380" cy="540" r="3.6" fill="#cad7ff" opacity="0.8"/>
+    <circle cx="850" cy="500" r="4.0" fill="#ffcc6f" opacity="0.85"/>
+
+    <!-- TRAPPIST-1 — grande, in evidenza, a centro-sinistra -->
+    <circle cx="320" cy="300" r="55" fill="url(#vr_red)" filter="url(#fblur6)"/>
+    <circle cx="320" cy="300" r="14" fill="#FF3300"/>
+    <text x="342" y="292" fill="#FF5533" font-size="11" font-family="Courier New" opacity="0.9">TRAPPIST-1</text>
+    <text x="342" y="307" fill="#FF3300" font-size="9"  font-family="Courier New" opacity="0.7">7 esopianeti</text>
+
+    <!-- Kepler-452 — centro-alto -->
+    <circle cx="650" cy="220" r="42" fill="url(#vr_gold)" filter="url(#fblur6)"/>
+    <circle cx="650" cy="220" r="11" fill="#FFD700"/>
+    <text x="665" y="212" fill="#FFD700" font-size="11" font-family="Courier New" opacity="0.9">Kepler-452</text>
+
+    <!-- 55 Cancri — destra -->
+    <circle cx="960" cy="310" r="38" fill="url(#vr_blue)" filter="url(#fblur6)"/>
+    <circle cx="960" cy="310" r="9"  fill="#FF8C00"/>
+    <text x="972" y="302" fill="#FF8C00" font-size="10" font-family="Courier New" opacity="0.9">55 Cancri</text>
+    <text x="972" y="316" fill="#FF8C00" font-size="8"  font-family="Courier New" opacity="0.6">5 pianeti</text>
+
+    <!-- Kepler-22 — basso destra -->
+    <circle cx="820" cy="490" r="34" fill="url(#vr_gold)" filter="url(#fblur6)"/>
+    <circle cx="820" cy="490" r="8"  fill="#FFD700"/>
+    <text x="832" y="482" fill="#FFD700" font-size="10" font-family="Courier New" opacity="0.9">Kepler-22</text>
+
+    <!-- Raggio controller (basso-sinistra → su) -->
+    <line x1="180" y1="680" x2="630" y2="220" stroke="#aaccff" stroke-width="1.2" opacity="0.25" stroke-dasharray="4,6"/>
+    <!-- punto mirino -->
+    <circle cx="650" cy="220" r="18" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.35"/>
+    <circle cx="650" cy="220" r="3"  fill="#ffffff" opacity="0.6"/>
+
+    <!-- HUD VR — bordi sottili tipo visore -->
+    <rect x="0" y="0" width="1200" height="680" fill="none"
+          stroke="rgba(100,140,255,0.08)" stroke-width="20" rx="30"/>
+
+    <!-- Cross-hair centro schermo -->
+    <line x1="596" y1="338" x2="604" y2="338" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+    <line x1="600" y1="334" x2="600" y2="342" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+
+    <!-- Label vista VR -->
+    <text x="600" y="658" fill="rgba(100,120,180,0.4)" font-size="10" font-family="Courier New" text-anchor="middle" letter-spacing="3">VISTA OCULUS QUEST 2 — DENTRO LA SFERA CELESTE</text>
+  </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ 03 INFO PANEL -->
+<div id="panel" class="screen">
+  <h2>03 — INFO PANEL IN VR</h2>
+  <p class="desc">Pannello informativo 3D che appare in VR quando si seleziona una stella col grilletto. Flotta davanti alla camera, sempre leggibile.</p>
+  <div class="two-col">
+    <!-- Panel: stella normale -->
+    <div>
+      <span class="label-chip">STELLA SENZA ESOPIANETI</span>
+      <div class="mockup-wrap">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#000010">
+        <defs>
+          <radialGradient id="p_bg1" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stop-color="#060318"/><stop offset="100%" stop-color="#000010"/>
+          </radialGradient>
+        </defs>
+        <rect width="560" height="320" fill="url(#p_bg1)"/>
+        <!-- stelle sfondo -->
+        <g fill="#fff" opacity="0.4">
+          <circle cx="45" cy="30" r="0.7"/><circle cx="120" cy="55" r="0.9"/>
+          <circle cx="200" cy="20" r="0.6"/><circle cx="310" cy="45" r="0.8"/>
+          <circle cx="400" cy="25" r="0.7"/><circle cx="490" cy="50" r="0.9"/>
+          <circle cx="80"  cy="280" r="0.8"/><circle cx="180" cy="295" r="0.6"/>
+          <circle cx="290" cy="285" r="0.9"/><circle cx="390" cy="275" r="0.7"/>
+          <circle cx="500" cy="288" r="0.8"/>
+        </g>
+        <!-- pannello -->
+        <rect x="60" y="55" width="440" height="210" rx="10" fill="rgba(0,0,12,0.9)" stroke="rgba(150,170,220,0.3)" stroke-width="1.2"/>
+        <!-- header line -->
+        <rect x="60" y="55" width="440" height="2" rx="1" fill="rgba(150,170,220,0.15)"/>
+        <!-- nome stella -->
+        <text x="82" y="92" fill="#cad7ff" font-size="18" font-family="Courier New" font-weight="bold">Betelgeuse</text>
+        <text x="82" y="115" fill="#556" font-size="10" font-family="Courier New" letter-spacing="1">SUPERGIGANTE ROSSA — ORIONE</text>
+        <!-- divider -->
+        <line x1="82" y1="128" x2="478" y2="128" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+        <!-- dati -->
+        <text x="82"  y="150" fill="#777" font-size="11" font-family="Courier New">RA</text>
+        <text x="130" y="150" fill="#aaa" font-size="11" font-family="Courier New">88.79°</text>
+        <text x="82"  y="168" fill="#777" font-size="11" font-family="Courier New">Dec</text>
+        <text x="130" y="168" fill="#aaa" font-size="11" font-family="Courier New">+7.41°</text>
+        <text x="82"  y="186" fill="#777" font-size="11" font-family="Courier New">Mag</text>
+        <text x="130" y="186" fill="#aaa" font-size="11" font-family="Courier New">0.42</text>
+        <text x="82"  y="204" fill="#777" font-size="11" font-family="Courier New">Tipo</text>
+        <text x="130" y="204" fill="#ffcc6f" font-size="11" font-family="Courier New">M  (rossa)</text>
+        <!-- badge nessun pianeta -->
+        <rect x="82" y="220" width="180" height="28" rx="5" fill="rgba(100,100,150,0.1)" stroke="rgba(100,100,150,0.2)" stroke-width="1"/>
+        <text x="100" y="239" fill="#556" font-size="10" font-family="Courier New">Nessun esopianeta</text>
+        <!-- dismiss hint -->
+        <text x="340" y="240" fill="#333" font-size="9" font-family="Courier New">GRIP per chiudere</text>
+      </svg>
+      </div>
+    </div>
+
+    <!-- Panel: stella con esopianeti -->
+    <div>
+      <span class="label-chip">SISTEMA CON ESOPIANETI</span>
+      <div class="mockup-wrap">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#000010">
+        <defs>
+          <radialGradient id="p_bg2" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stop-color="#0a0515"/><stop offset="100%" stop-color="#000010"/>
+          </radialGradient>
+          <radialGradient id="glow_p" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FF3300" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#FF3300" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="560" height="320" fill="url(#p_bg2)"/>
+        <!-- glow stella -->
+        <circle cx="500" cy="160" r="80" fill="url(#glow_p)"/>
+        <circle cx="500" cy="160" r="18" fill="#FF3300" opacity="0.8"/>
+        <!-- stelle sfondo -->
+        <g fill="#fff" opacity="0.35">
+          <circle cx="30"  cy="25" r="0.7"/><circle cx="100" cy="50" r="0.9"/>
+          <circle cx="190" cy="18" r="0.6"/><circle cx="270" cy="42" r="0.8"/>
+          <circle cx="80"  cy="285" r="0.8"/><circle cx="200" cy="295" r="0.6"/>
+          <circle cx="320" cy="278" r="0.9"/>
+        </g>
+        <!-- pannello -->
+        <rect x="40" y="30" width="430" height="258" rx="10" fill="rgba(0,0,10,0.92)" stroke="rgba(255,180,0,0.35)" stroke-width="1.2"/>
+        <!-- accento top border gold -->
+        <rect x="40" y="30" width="430" height="3" rx="1" fill="rgba(255,200,0,0.2)"/>
+        <!-- nome -->
+        <text x="62" y="68" fill="#FFD700" font-size="18" font-family="Courier New" font-weight="bold">TRAPPIST-1</text>
+        <text x="62" y="88" fill="#554" font-size="10" font-family="Courier New" letter-spacing="1">NANA ROSSA — AQUARIO</text>
+        <!-- divider -->
+        <line x1="62" y1="100" x2="450" y2="100" stroke="rgba(255,180,0,0.12)" stroke-width="1"/>
+        <!-- dati -->
+        <text x="62"  y="120" fill="#777" font-size="11" font-family="Courier New">RA</text>
+        <text x="110" y="120" fill="#aaa" font-size="11" font-family="Courier New">346.62°</text>
+        <text x="62"  y="137" fill="#777" font-size="11" font-family="Courier New">Dec</text>
+        <text x="110" y="137" fill="#aaa" font-size="11" font-family="Courier New">-5.04°</text>
+        <text x="62"  y="154" fill="#777" font-size="11" font-family="Courier New">Mag</text>
+        <text x="110" y="154" fill="#aaa" font-size="11" font-family="Courier New">18.80</text>
+        <text x="62"  y="171" fill="#777" font-size="11" font-family="Courier New">Tipo</text>
+        <text x="110" y="171" fill="#ffcc6f" font-size="11" font-family="Courier New">M  (rossa)</text>
+        <!-- badge pianeti -->
+        <rect x="52" y="188" width="408" height="72" rx="7" fill="rgba(255,160,0,0.07)" stroke="rgba(255,160,0,0.2)" stroke-width="1"/>
+        <text x="72" y="212" fill="#FFD700" font-size="14" font-family="Courier New" font-weight="bold">7 esopianeti</text>
+        <text x="72" y="230" fill="#886" font-size="10" font-family="Courier New">Confidence: 100.0%</text>
+        <!-- barra confidence -->
+        <rect x="72" y="242" width="368" height="8" rx="3" fill="rgba(255,180,0,0.12)"/>
+        <rect x="72" y="242" width="368" height="8" rx="3" fill="#FFD700"/>
+      </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ 04 CONTROLLER -->
+<div id="controller" class="screen">
+  <h2>04 — CONTROLLER MAPPING — OCULUS QUEST 2</h2>
+  <p class="desc">Mappatura dei controlli dei controller Quest 2 per navigare la sfera celeste e interagire con le stelle.</p>
+  <div class="mockup-wrap">
+  <svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#03030e">
+    <defs>
+      <radialGradient id="ctrl_bg" cx="50%" cy="50%" r="70%">
+        <stop offset="0%" stop-color="#080520"/><stop offset="100%" stop-color="#03030e"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="600" fill="url(#ctrl_bg)"/>
+
+    <!-- ─── CONTROLLER SINISTRO ─── -->
+    <!-- corpo -->
+    <ellipse cx="340" cy="340" rx="90" ry="130" fill="#1a1a2e" stroke="#2a2a4a" stroke-width="2"/>
+    <ellipse cx="340" cy="300" rx="70" ry="85"  fill="#151528"/>
+    <!-- maniglia -->
+    <path d="M 270 380 Q 260 450 280 490 Q 300 520 340 520 Q 380 520 400 490 Q 420 450 410 380 Z"
+          fill="#1a1a2e" stroke="#2a2a4a" stroke-width="2"/>
+
+    <!-- Thumbstick sinistro -->
+    <ellipse cx="310" cy="310" rx="28" ry="28" fill="#0d0d20" stroke="#333355" stroke-width="1.5"/>
+    <ellipse cx="310" cy="310" rx="18" ry="18" fill="#222238"/>
+    <ellipse cx="310" cy="307" rx="10" ry="10" fill="#2d2d48"/>
+    <!-- freccia joystick -->
+    <text x="302" y="315" fill="#5566aa" font-size="14" font-family="Courier New">↕</text>
+
+    <!-- Pulsante X -->
+    <circle cx="370" cy="295" r="12" fill="#1e3a5f" stroke="#2a5080" stroke-width="1.5"/>
+    <text x="366" y="300" fill="#4488cc" font-size="11" font-family="Courier New">X</text>
+    <!-- Pulsante Y -->
+    <circle cx="370" cy="320" r="12" fill="#1e3a5f" stroke="#2a5080" stroke-width="1.5"/>
+    <text x="367" y="325" fill="#4488cc" font-size="11" font-family="Courier New">Y</text>
+
+    <!-- Grip trigger sinistro -->
+    <rect x="255" y="360" width="20" height="50" rx="5" fill="#222238" stroke="#333355" stroke-width="1.5"/>
+
+    <!-- Index trigger sinistro -->
+    <path d="M 268 220 Q 258 240 262 260 L 278 256 Q 274 240 282 222 Z"
+          fill="#222238" stroke="#333355" stroke-width="1.5"/>
+
+    <!-- Label sinistro -->
+    <text x="340" y="560" fill="#445" font-size="11" font-family="Courier New" text-anchor="middle" letter-spacing="2">CONTROLLER SINISTRO</text>
+
+    <!-- Annotazioni sinistro -->
+    <line x1="295" y1="310" x2="150" y2="220" stroke="#334" stroke-width="1" stroke-dasharray="3,4"/>
+    <rect x="10"  y="185" width="135" height="55" rx="5" fill="rgba(0,80,180,0.12)" stroke="#224" stroke-width="1"/>
+    <text x="22"  y="205" fill="#6688bb" font-size="11" font-family="Courier New" font-weight="bold">JOYSTICK</text>
+    <text x="22"  y="220" fill="#446" font-size="9"  font-family="Courier New">Ruota la sfera</text>
+    <text x="22"  y="233" fill="#446" font-size="9"  font-family="Courier New">celeste</text>
+
+    <line x1="262" y1="380" x2="120" y2="340" stroke="#334" stroke-width="1" stroke-dasharray="3,4"/>
+    <rect x="10"  y="310" width="105" height="42" rx="5" fill="rgba(0,80,180,0.12)" stroke="#224" stroke-width="1"/>
+    <text x="22"  y="329" fill="#6688bb" font-size="11" font-family="Courier New" font-weight="bold">GRIP</text>
+    <text x="22"  y="344" fill="#446" font-size="9"  font-family="Courier New">Chiudi pannello</text>
+
+    <line x1="272" y1="245" x2="120" y2="200" stroke="#334" stroke-width="1" stroke-dasharray="3,4"/>
+    <rect x="10"  y="168" width="105" height="30" rx="5" fill="rgba(0,80,180,0.06)" stroke="#223" stroke-width="1"/>
+
+    <!-- ─── CONTROLLER DESTRO ─── -->
+    <ellipse cx="860" cy="340" rx="90" ry="130" fill="#1a1a2e" stroke="#2a2a4a" stroke-width="2"/>
+    <ellipse cx="860" cy="300" rx="70" ry="85"  fill="#151528"/>
+    <path d="M 790 380 Q 780 450 800 490 Q 820 520 860 520 Q 900 520 920 490 Q 940 450 930 380 Z"
+          fill="#1a1a2e" stroke="#2a2a4a" stroke-width="2"/>
+
+    <!-- Thumbstick destro -->
+    <ellipse cx="830" cy="325" rx="28" ry="28" fill="#0d0d20" stroke="#333355" stroke-width="1.5"/>
+    <ellipse cx="830" cy="325" rx="18" ry="18" fill="#222238"/>
+    <ellipse cx="830" cy="322" rx="10" ry="10" fill="#2d2d48"/>
+    <text x="822" y="330" fill="#5566aa" font-size="14" font-family="Courier New">↕</text>
+
+    <!-- Pulsante A -->
+    <circle cx="895" cy="290" r="12" fill="#1e3a5f" stroke="#2a5080" stroke-width="1.5"/>
+    <text x="891" y="295" fill="#4488cc" font-size="11" font-family="Courier New">A</text>
+    <!-- Pulsante B -->
+    <circle cx="895" cy="315" r="12" fill="#1e3a5f" stroke="#2a5080" stroke-width="1.5"/>
+    <text x="891" y="320" fill="#4488cc" font-size="11" font-family="Courier New">B</text>
+
+    <!-- Grip trigger destro -->
+    <rect x="925" y="360" width="20" height="50" rx="5" fill="#222238" stroke="#333355" stroke-width="1.5"/>
+
+    <!-- Index trigger destro — PRINCIPALE -->
+    <path d="M 930 220 Q 942 240 938 260 L 922 256 Q 926 240 918 222 Z"
+          fill="#1a3a1a" stroke="#2a5a2a" stroke-width="2"/>
+
+    <!-- Label destro -->
+    <text x="860" y="560" fill="#445" font-size="11" font-family="Courier New" text-anchor="middle" letter-spacing="2">CONTROLLER DESTRO</text>
+
+    <!-- Annotazioni destro -->
+    <line x1="940" y1="240" x2="1060" y2="160" stroke="#334" stroke-width="1" stroke-dasharray="3,4"/>
+    <rect x="1065" y="130" width="120" height="55" rx="5" fill="rgba(0,180,80,0.12)" stroke="#242" stroke-width="1"/>
+    <text x="1078" y="152" fill="#44bb66" font-size="11" font-family="Courier New" font-weight="bold">GRILLETTO</text>
+    <text x="1078" y="167" fill="#464" font-size="9"  font-family="Courier New">Seleziona stella</text>
+    <text x="1078" y="180" fill="#464" font-size="9"  font-family="Courier New">+ mostra info</text>
+
+    <line x1="845" y1="325" x2="1060" y2="290" stroke="#334" stroke-width="1" stroke-dasharray="3,4"/>
+    <rect x="1065" y="265" width="120" height="42" rx="5" fill="rgba(0,80,180,0.12)" stroke="#224" stroke-width="1"/>
+    <text x="1078" y="284" fill="#6688bb" font-size="11" font-family="Courier New" font-weight="bold">JOYSTICK</text>
+    <text x="1078" y="299" fill="#446" font-size="9"  font-family="Courier New">Zoom / naviga</text>
+
+    <line x1="940" y1="385" x2="1060" y2="370" stroke="#334" stroke-width="1" stroke-dasharray="3,4"/>
+    <rect x="1065" y="350" width="120" height="42" rx="5" fill="rgba(0,80,180,0.12)" stroke="#224" stroke-width="1"/>
+    <text x="1078" y="369" fill="#6688bb" font-size="11" font-family="Courier New" font-weight="bold">GRIP</text>
+    <text x="1078" y="384" fill="#446" font-size="9"  font-family="Courier New">Chiudi pannello</text>
+
+    <!-- Raggio visivo -->
+    <line x1="860" y1="340" x2="600" y2="200" stroke="rgba(100,200,100,0.2)" stroke-width="1.5" stroke-dasharray="5,8"/>
+    <text x="680" y="260" fill="rgba(80,160,80,0.5)" font-size="9" font-family="Courier New" transform="rotate(-25 680 260)">raggio controller</text>
+
+    <!-- Titolo centrale -->
+    <text x="600" y="48" fill="#334" font-size="11" font-family="Courier New" text-anchor="middle" letter-spacing="3">OCULUS QUEST 2 — MAPPATURA CONTROLLI</text>
+    <line x1="200" y1="56" x2="1000" y2="56" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+    <!-- Head tracking note -->
+    <rect x="460" y="440" width="280" height="50" rx="8" fill="rgba(100,120,200,0.07)" stroke="rgba(100,120,200,0.15)" stroke-width="1"/>
+    <text x="600" y="462" fill="#aabfff" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">HEAD TRACKING</text>
+    <text x="600" y="479" fill="#446" font-size="9" font-family="Courier New" text-anchor="middle">Muovi la testa per guardare in tutte le direzioni</text>
+  </svg>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ 05 USER FLOW -->
+<div id="flow" class="screen">
+  <h2>05 — USER FLOW</h2>
+  <p class="desc">Flusso completo dall'apertura del browser sul Quest 2 all'esplorazione della sfera celeste.</p>
+  <div class="mockup-wrap">
+  <svg viewBox="0 0 1200 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#03030e">
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="rgba(100,130,200,0.6)"/>
+      </marker>
+    </defs>
+    <rect width="1200" height="520" fill="#03030e"/>
+
+    <!-- Step 1 -->
+    <rect x="30"  y="180" width="160" height="140" rx="10" fill="#080518" stroke="rgba(100,120,200,0.3)" stroke-width="1.5"/>
+    <text x="110" y="230" fill="#aabfff" font-size="22" text-anchor="middle" font-family="Courier New">🥽</text>
+    <text x="110" y="258" fill="#aabfff" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">INDOSSA</text>
+    <text x="110" y="274" fill="#556" font-size="10" font-family="Courier New" text-anchor="middle">Quest 2</text>
+    <text x="110" y="295" fill="#334" font-size="9" font-family="Courier New" text-anchor="middle">Accendi il visore</text>
+    <circle cx="110" cy="155" r="16" fill="#0a0828" stroke="rgba(100,120,200,0.3)" stroke-width="1"/>
+    <text x="110" y="160" fill="#6677aa" font-size="12" text-anchor="middle" font-family="Courier New">01</text>
+
+    <!-- Arrow 1→2 -->
+    <line x1="192" y1="250" x2="228" y2="250" stroke="rgba(100,130,200,0.4)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Step 2 -->
+    <rect x="230" y="180" width="160" height="140" rx="10" fill="#080518" stroke="rgba(100,120,200,0.3)" stroke-width="1.5"/>
+    <text x="310" y="230" fill="#aabfff" font-size="22" text-anchor="middle" font-family="Courier New">🌐</text>
+    <text x="310" y="258" fill="#aabfff" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">META BROWSER</text>
+    <text x="310" y="274" fill="#556" font-size="10" font-family="Courier New" text-anchor="middle">Apri browser</text>
+    <text x="310" y="290" fill="#334" font-size="9" font-family="Courier New" text-anchor="middle">angeloazzzzurro</text>
+    <text x="310" y="303" fill="#334" font-size="9" font-family="Courier New" text-anchor="middle">.github.io/COSMO-VR</text>
+    <circle cx="310" cy="155" r="16" fill="#0a0828" stroke="rgba(100,120,200,0.3)" stroke-width="1"/>
+    <text x="310" y="160" fill="#6677aa" font-size="12" text-anchor="middle" font-family="Courier New">02</text>
+
+    <!-- Arrow 2→3 -->
+    <line x1="392" y1="250" x2="428" y2="250" stroke="rgba(100,130,200,0.4)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Step 3 -->
+    <rect x="430" y="180" width="160" height="140" rx="10" fill="#080518" stroke="rgba(50,200,100,0.3)" stroke-width="1.5"/>
+    <text x="510" y="230" fill="#44cc88" font-size="22" text-anchor="middle" font-family="Courier New">▶</text>
+    <text x="510" y="258" fill="#44cc88" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">ENTRA IN VR</text>
+    <text x="510" y="274" fill="#556" font-size="10" font-family="Courier New" text-anchor="middle">Click bottone</text>
+    <text x="510" y="290" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">WebXR session</text>
+    <text x="510" y="303" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">immersive-vr</text>
+    <circle cx="510" cy="155" r="16" fill="#0a1a10" stroke="rgba(50,200,100,0.3)" stroke-width="1"/>
+    <text x="510" y="160" fill="#44aa66" font-size="12" text-anchor="middle" font-family="Courier New">03</text>
+
+    <!-- Arrow 3→4 -->
+    <line x1="592" y1="250" x2="628" y2="250" stroke="rgba(100,130,200,0.4)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Step 4 -->
+    <rect x="630" y="180" width="160" height="140" rx="10" fill="#080518" stroke="rgba(200,180,50,0.3)" stroke-width="1.5"/>
+    <text x="710" y="230" fill="#FFD700" font-size="22" text-anchor="middle" font-family="Courier New">✦</text>
+    <text x="710" y="258" fill="#FFD700" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">ESPLORA</text>
+    <text x="710" y="274" fill="#556" font-size="10" font-family="Courier New" text-anchor="middle">Sfera celeste 3D</text>
+    <text x="710" y="290" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">Muovi la testa</text>
+    <text x="710" y="303" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">Joystick = rotazione</text>
+    <circle cx="710" cy="155" r="16" fill="#1a1500" stroke="rgba(200,180,50,0.3)" stroke-width="1"/>
+    <text x="710" y="160" fill="#aa8800" font-size="12" text-anchor="middle" font-family="Courier New">04</text>
+
+    <!-- Arrow 4→5 -->
+    <line x1="792" y1="250" x2="828" y2="250" stroke="rgba(100,130,200,0.4)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Step 5 -->
+    <rect x="830" y="180" width="160" height="140" rx="10" fill="#080518" stroke="rgba(255,120,50,0.3)" stroke-width="1.5"/>
+    <text x="910" y="230" fill="#FF8C00" font-size="22" text-anchor="middle" font-family="Courier New">◎</text>
+    <text x="910" y="258" fill="#FF8C00" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">PUNTA STELLA</text>
+    <text x="910" y="274" fill="#556" font-size="10" font-family="Courier New" text-anchor="middle">Raggio controller</text>
+    <text x="910" y="290" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">Mirino si posiziona</text>
+    <text x="910" y="303" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">sulla stella</text>
+    <circle cx="910" cy="155" r="16" fill="#150800" stroke="rgba(255,120,50,0.3)" stroke-width="1"/>
+    <text x="910" y="160" fill="#aa5500" font-size="12" text-anchor="middle" font-family="Courier New">05</text>
+
+    <!-- Arrow 5→6 -->
+    <line x1="992" y1="250" x2="1028" y2="250" stroke="rgba(100,130,200,0.4)" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- Step 6 -->
+    <rect x="1030" y="180" width="160" height="140" rx="10" fill="#080518" stroke="rgba(255,200,50,0.35)" stroke-width="1.5"/>
+    <text x="1110" y="230" fill="#FFD700" font-size="22" text-anchor="middle" font-family="Courier New">🪐</text>
+    <text x="1110" y="258" fill="#FFD700" font-size="11" font-family="Courier New" text-anchor="middle" font-weight="bold">INFO PANEL</text>
+    <text x="1110" y="274" fill="#556" font-size="10" font-family="Courier New" text-anchor="middle">Grilletto = select</text>
+    <text x="1110" y="290" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">Pannello 3D flotta</text>
+    <text x="1110" y="303" fill="#334" font-size="9"  font-family="Courier New" text-anchor="middle">davanti alla camera</text>
+    <circle cx="1110" cy="155" r="16" fill="#1a1200" stroke="rgba(255,200,50,0.3)" stroke-width="1"/>
+    <text x="1110" y="160" fill="#aa9900" font-size="12" text-anchor="middle" font-family="Courier New">06</text>
+
+    <!-- Note tecniche sotto -->
+    <rect x="30" y="360" width="1140" height="60" rx="8" fill="rgba(100,120,200,0.04)" stroke="rgba(100,120,200,0.1)" stroke-width="1"/>
+    <text x="600" y="384" fill="#445" font-size="10" font-family="Courier New" text-anchor="middle" letter-spacing="2">NOTE TECNICHE</text>
+    <text x="600" y="402" fill="#334" font-size="10" font-family="Courier New" text-anchor="middle">WebXR richiede HTTPS  ·  GitHub Pages lo fornisce automaticamente  ·  Compatibile con Meta Browser su Quest 2  ·  No app da installare</text>
+
+    <text x="600" y="490" fill="#223" font-size="10" font-family="Courier New" text-anchor="middle" letter-spacing="1">COSMO VR OCULUS — USER FLOW</text>
+  </svg>
+  </div>
+</div>
+
+<script>
+function show(id, btn) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+}
+</script>
+</body>
+</html>
