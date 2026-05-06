@@ -61,7 +61,7 @@ export function createMilkyWay(radius) {
     // ── Geometria: toro largo lungo il piano galattico ───────────────────────
     // radius * 0.99 = raggio principale (appena dentro la sfera stelle)
     // radius * 0.09 = spessore della banda
-    const geo = new THREE.TorusGeometry(radius * 0.99, radius * 0.09, 3, 128);
+    const geo = new THREE.TorusGeometry(radius * 0.99, radius * 0.09, 8, 128);
     const mat = new THREE.MeshBasicMaterial({
         map: texture,
         transparent: true,
