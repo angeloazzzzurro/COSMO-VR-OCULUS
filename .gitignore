@@ -1,5 +1,4 @@
-# Dati stelle (generati localmente, possono essere grandi)
-webxr/data/stars.json
+# stars.json incluso nel repo per GitHub Pages hosting
 
 # Python
 __pycache__/
@@ -12,8 +11,7 @@ dist/
 build/
 *.egg
 
-# Dati astronomici (HYG, Kepler KOI)
-data/
+# Dati astronomici grezzi (non nel repo)
 *.csv
 *.fits
 *.hdf5
