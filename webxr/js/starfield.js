@@ -93,14 +93,14 @@ export function createStarfield(stars, radius) {
 
     const hostMesh = new THREE.InstancedMesh(
         new THREE.SphereGeometry(1, 10, 10),
-        new THREE.MeshBasicMaterial({ vertexColors: true, depthWrite: false }),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, depthWrite: false }),
         hCount
     );
 
     const haloMesh = new THREE.InstancedMesh(
         new THREE.SphereGeometry(1, 6, 6),
         new THREE.MeshBasicMaterial({
-            vertexColors: true, transparent: true, opacity: 0.12,
+            color: 0xffffff, transparent: true, opacity: 0.14,
             depthWrite: false, blending: THREE.AdditiveBlending,
         }),
         hCount
@@ -108,7 +108,7 @@ export function createStarfield(stars, radius) {
 
     hostStars.forEach((s, i) => {
         const pos  = new THREE.Vector3(s.x, s.y, s.z).multiplyScalar(radius);
-        const size = Math.max(2.0, Math.min(10.0, 7.5 - s.mag)) * 6.0;
+        const size = Math.max(1.2, Math.min(4.0, 7.5 - s.mag));
         hostPositions.push(pos.clone());
         hostSizes.push(size);
 
@@ -116,7 +116,7 @@ export function createStarfield(stars, radius) {
         hostMesh.setMatrixAt(i, dummy.matrix);
         hostMesh.setColorAt(i, origColors[i]);
 
-        dummy.scale.setScalar(size * 3.5); dummy.updateMatrix();
+        dummy.scale.setScalar(size * 2.2); dummy.updateMatrix();
         haloMesh.setMatrixAt(i, dummy.matrix);
         haloMesh.setColorAt(i, origColors[i]);
     });
@@ -163,9 +163,9 @@ export function createStarfield(stars, radius) {
         hoverRing.position.copy(pos);
         hoverRing.lookAt(0, 0, 0);
         const s = star.has_planet
-            ? Math.max(0.6, Math.min(5.0, 6.5 - star.mag)) * 5.5
-            : Math.max(0.4, Math.min(5.0, 6.5 - star.mag)) * 3.0;
-        hoverRing.scale.setScalar(Math.max(4, s));
+            ? Math.max(1.2, Math.min(4.0, 7.5 - star.mag)) * 2.5
+            : Math.max(0.5, Math.min(2.0, 6.5 - star.mag)) * 1.5;
+        hoverRing.scale.setScalar(Math.max(1.5, s));
         hoverRing.visible = true;
         return star;
     }
