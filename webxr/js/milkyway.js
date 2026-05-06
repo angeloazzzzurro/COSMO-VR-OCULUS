@@ -1,90 +1,112 @@
 import * as THREE from 'three';
 
-/**
- * Banda della Via Lattea — toro procedurale allineato al piano galattico.
- * Il polo nord galattico in coordinate equatoriali è: RA=192.85°, Dec=27.13°
- */
+// Galactic → Equatorial J2000 rotation matrix
+const M = [
+    [-0.0548755604,  0.4941094279, -0.8676661490],
+    [-0.8734370902, -0.4448296300, -0.1980763734],
+    [-0.4838350155,  0.7469822445,  0.4559837762]
+];
+
+function galToEq(l_deg, b_deg) {
+    const l  = l_deg * Math.PI / 180;
+    const b  = b_deg * Math.PI / 180;
+    const gx = Math.cos(b) * Math.cos(l);
+    const gy = Math.cos(b) * Math.sin(l);
+    const gz = Math.sin(b);
+    const ex = M[0][0]*gx + M[0][1]*gy + M[0][2]*gz;
+    const ey = M[1][0]*gx + M[1][1]*gy + M[1][2]*gz;
+    const ez = M[2][0]*gx + M[2][1]*gy + M[2][2]*gz;
+    return {
+        ra:  (Math.atan2(ey, ex) * 180 / Math.PI + 360) % 360,
+        dec: Math.asin(Math.max(-1, Math.min(1, ez))) * 180 / Math.PI
+    };
+}
+
+function blob(ctx, cx, cy, rw, rh, alpha, W) {
+    // Disegna blob con wrapping orizzontale per evitare seam a RA=0/360
+    for (const ox of [0, W, -W]) {
+        const x = cx + ox;
+        if (x + rw < 0 || x - rw > W * 2) continue;
+        const g = ctx.createRadialGradient(x, cy, 0, x, cy, rw);
+        g.addColorStop(0,   `rgba(190,165,240,${alpha})`);
+        g.addColorStop(0.5, `rgba(140,110,210,${alpha * 0.45})`);
+        g.addColorStop(1,   'rgba(0,0,0,0)');
+        ctx.save();
+        ctx.scale(1, rh / rw);
+        ctx.fillStyle = g;
+        ctx.fillRect(x - rw, cy * (rw / rh) - rw, rw * 2, rw * 2);
+        ctx.restore();
+    }
+}
+
 export function createMilkyWay(radius) {
-    // ── Texture procedurale ──────────────────────────────────────────────────
-    const W = 1024, H = 128;
+    const W = 2048, H = 1024;
     const cvs = document.createElement('canvas');
     cvs.width = W; cvs.height = H;
     const ctx = cvs.getContext('2d');
 
-    // Gradiente verticale: trasparente ai bordi, luminoso al centro
-    const grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0,    'rgba(60, 40, 100, 0)');
-    grad.addColorStop(0.18, 'rgba(90, 70, 160, 0.10)');
-    grad.addColorStop(0.38, 'rgba(140, 110, 200, 0.22)');
-    grad.addColorStop(0.50, 'rgba(170, 140, 230, 0.32)');
-    grad.addColorStop(0.62, 'rgba(140, 110, 200, 0.22)');
-    grad.addColorStop(0.82, 'rgba(90, 70, 160, 0.10)');
-    grad.addColorStop(1,    'rgba(60, 40, 100, 0)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
+    // Striscia galattica: campiona lungo l'equatore galattico
+    const STEPS = 720;
+    for (let i = 0; i < STEPS; i++) {
+        const l = (i / STEPS) * 360;
+        const { ra, dec } = galToEq(l, 0);
 
-    // Zona del centro galattico più luminosa (primo quarto della texture)
-    const gcGrad = ctx.createLinearGradient(0, 0, W * 0.45, 0);
-    gcGrad.addColorStop(0,   'rgba(200, 160, 255, 0.18)');
-    gcGrad.addColorStop(0.5, 'rgba(150, 110, 220, 0.10)');
-    gcGrad.addColorStop(1,   'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = gcGrad;
-    ctx.fillRect(0, H * 0.25, W * 0.45, H * 0.5);
+        // x in texture: RA=0° → u=0, RA=360° → u=1
+        // Textura sarà flipdata con repeat.x=-1 quindi usiamo RA diretto
+        const px = (ra / 360) * W;
+        const py = ((90 - dec) / 180) * H;
 
-    // Puntini stellari nella banda
-    for (let i = 0; i < 350; i++) {
-        const x = Math.random() * W;
-        const y = H * 0.2 + Math.random() * H * 0.6;
-        const r = Math.random() * 1.4;
-        const a = Math.random() * 0.45;
+        // Galactic center (l≈0 e l≈360) è più luminoso
+        const lc  = Math.min(l, 360 - l);
+        const boost = 1 + 2.8 * Math.exp(-(lc * lc) / (40 * 40));
+
+        const rw = W * 0.040 * (1 + 0.4 * boost);
+        const rh = H * 0.075 * (1 + 0.3 * boost);
+
+        blob(ctx, px, py, rw, rh, 0.018 * boost, W);
+    }
+
+    // Stelle nella banda
+    for (let i = 0; i < 700; i++) {
+        const l  = Math.random() * 360;
+        const b  = (Math.random() - 0.5) * 36;
+        const { ra, dec } = galToEq(l, b);
+        const px = (ra / 360) * W;
+        const py = ((90 - dec) / 180) * H;
+        const a  = Math.random() * 0.55 * Math.exp(-Math.abs(b) / 9);
         ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(220, 200, 255, ${a})`;
+        ctx.arc(px, py, Math.random() * 1.6 + 0.3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(225,210,255,${a})`;
         ctx.fill();
     }
 
-    // Qualche piccola nebulosa sfocata
-    for (let i = 0; i < 8; i++) {
-        const nx = Math.random() * W;
-        const ny = H * 0.3 + Math.random() * H * 0.4;
-        const gr = ctx.createRadialGradient(nx, ny, 0, nx, ny, 20 + Math.random() * 30);
-        gr.addColorStop(0,   `rgba(180, 140, 255, ${0.08 + Math.random() * 0.08})`);
-        gr.addColorStop(1,   'rgba(0,0,0,0)');
-        ctx.fillStyle = gr;
-        ctx.fillRect(nx - 50, ny - 50, 100, 100);
-    }
+    // Nebulosa centro galattico
+    const { ra: gcRa, dec: gcDec } = galToEq(0, 0);
+    const gcx = (gcRa / 360) * W;
+    const gcy = ((90 - gcDec) / 180) * H;
+    const gcg = ctx.createRadialGradient(gcx, gcy, 0, gcx, gcy, W * 0.08);
+    gcg.addColorStop(0,   'rgba(255,200,180,0.12)');
+    gcg.addColorStop(0.4, 'rgba(200,150,255,0.06)');
+    gcg.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = gcg;
+    ctx.fillRect(gcx - W * 0.08, gcy - W * 0.08, W * 0.16, W * 0.16);
 
-    const texture = new THREE.CanvasTexture(cvs);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.repeat.set(2, 1);  // ripeti 2 volte per coprire il toro
+    const tex = new THREE.CanvasTexture(cvs);
+    // BackSide mappa la texture specchiata → compensiamo con repeat negativo
+    tex.wrapS  = THREE.RepeatWrapping;
+    tex.repeat.set(-1, 1);
+    tex.offset.set(1, 0);
 
-    // ── Geometria: toro largo lungo il piano galattico ───────────────────────
-    // radius * 0.99 = raggio principale (appena dentro la sfera stelle)
-    // radius * 0.09 = spessore della banda
-    const geo = new THREE.TorusGeometry(radius * 0.99, radius * 0.09, 8, 128);
+    // Sfera interna: il camera al centro vede l'interno (BackSide)
+    const geo = new THREE.SphereGeometry(radius * 0.984, 64, 32);
     const mat = new THREE.MeshBasicMaterial({
-        map: texture,
+        map:         tex,
+        side:        THREE.BackSide,
         transparent: true,
-        opacity: 0.55,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending
+        depthWrite:  false,
+        blending:    THREE.AdditiveBlending,
+        opacity:     0.80,
     });
-    const mesh = new THREE.Mesh(geo, mat);
 
-    // ── Rotazione verso il piano galattico reale ──────────────────────────────
-    // Polo nord galattico in eq: RA=192.85°, Dec=27.13°
-    // Conversione a Three.js (Y-up, -Z forward)
-    const ra  = 192.85 * Math.PI / 180;
-    const dec = 27.13  * Math.PI / 180;
-    const gnp = new THREE.Vector3(
-         Math.cos(dec) * Math.cos(ra),   //  x
-         Math.sin(dec),                   //  y (up)
-        -Math.cos(dec) * Math.sin(ra)     // -z (forward)
-    ).normalize();
-
-    // Il toro di default ha normale Y → ruota verso gnp
-    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), gnp);
-
-    return mesh;
+    return new THREE.Mesh(geo, mat);
 }
