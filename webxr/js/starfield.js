@@ -13,7 +13,7 @@ const VERT_SHADER = `
     void main() {
         vColor = aColor;
         vec4 mvPos   = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size * (400.0 / -mvPos.z);
+        gl_PointSize = size * (900.0 / -mvPos.z);
         gl_Position  = projectionMatrix * mvPos;
     }
 `;
@@ -23,8 +23,11 @@ const FRAG_SHADER = `
     void main() {
         float d = distance(gl_PointCoord, vec2(0.5));
         if (d > 0.5) discard;
-        float alpha = smoothstep(0.5, 0.05, d) * 0.9;
-        gl_FragColor = vec4(vColor, alpha);
+        // Core brillante + alone morbido
+        float core  = smoothstep(0.18, 0.0,  d);
+        float glow  = smoothstep(0.50, 0.05, d) * 0.6;
+        float alpha = clamp(core + glow, 0.0, 1.0);
+        gl_FragColor = vec4(vColor * (1.0 + core * 0.8), alpha);
     }
 `;
 
@@ -50,7 +53,7 @@ export function createStarfield(stars, radius) {
         nPos[i*3]   = v.x; nPos[i*3+1] = v.y; nPos[i*3+2] = v.z;
         const c = new THREE.Color(SPECTRAL_COLORS[s.spect] ?? 0xffffff);
         nColors[i*3] = c.r; nColors[i*3+1] = c.g; nColors[i*3+2] = c.b;
-        nSizes[i] = Math.max(0.4, Math.min(5.0, 6.5 - s.mag)) * 1.8;
+        nSizes[i] = Math.max(1.0, Math.min(9.0, 7.5 - s.mag)) * 3.2;
     });
 
     const nGeo = new THREE.BufferGeometry();
@@ -85,7 +88,7 @@ export function createStarfield(stars, radius) {
 
     hostStars.forEach((s, i) => {
         const pos  = new THREE.Vector3(s.x, s.y, s.z).multiplyScalar(radius);
-        const size = Math.max(0.6, Math.min(5.0, 6.5 - s.mag)) * 4.0;
+        const size = Math.max(2.0, Math.min(10.0, 7.5 - s.mag)) * 6.0;
         hostPositions.push(pos.clone());
         hostSizes.push(size);
 
@@ -93,7 +96,7 @@ export function createStarfield(stars, radius) {
         hostMesh.setMatrixAt(i, dummy.matrix);
         hostMesh.setColorAt(i, origColors[i]);
 
-        dummy.scale.setScalar(size * 2.8); dummy.updateMatrix();
+        dummy.scale.setScalar(size * 3.5); dummy.updateMatrix();
         haloMesh.setMatrixAt(i, dummy.matrix);
         haloMesh.setColorAt(i, origColors[i]);
     });

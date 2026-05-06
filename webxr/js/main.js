@@ -65,7 +65,7 @@ async function init() {
     scene = new THREE.Scene();
     addNebulaBackground();
 
-    camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 2000);
+    camera = new THREE.PerspectiveCamera(85, innerWidth / innerHeight, 0.1, 2000);
     camera.position.set(0, 0, 0.001);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
