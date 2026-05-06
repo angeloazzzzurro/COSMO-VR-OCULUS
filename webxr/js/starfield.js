@@ -93,13 +93,16 @@ export function createStarfield(stars, radius) {
 
     const hostMesh = new THREE.InstancedMesh(
         new THREE.SphereGeometry(1, 10, 10),
-        new THREE.MeshBasicMaterial({ vertexColors: true }),
+        new THREE.MeshBasicMaterial({ vertexColors: true, depthWrite: false }),
         hCount
     );
 
     const haloMesh = new THREE.InstancedMesh(
         new THREE.SphereGeometry(1, 6, 6),
-        new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.10, vertexColors: true }),
+        new THREE.MeshBasicMaterial({
+            vertexColors: true, transparent: true, opacity: 0.12,
+            depthWrite: false, blending: THREE.AdditiveBlending,
+        }),
         hCount
     );
 
