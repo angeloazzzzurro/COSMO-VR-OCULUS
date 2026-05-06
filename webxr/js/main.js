@@ -98,7 +98,7 @@ async function init() {
     scene.add(createMilkyWay(SPHERE_RADIUS));
 
     constGroup = createConstellations(SPHERE_RADIUS);
-    constGroup.visible = false;
+    constGroup.visible = true;
     scene.add(constGroup);
 
     infoPanel = createInfoPanel();
@@ -137,10 +137,14 @@ async function init() {
         starfield.setFilter(null);
     });
 
-    document.getElementById('toggle-const')?.addEventListener('click', e => {
-        constGroup.visible = !constGroup.visible;
-        e.currentTarget.classList.toggle('active', constGroup.visible);
-    });
+    const toggleConstBtn = document.getElementById('toggle-const');
+    if (toggleConstBtn) {
+        toggleConstBtn.classList.add('active');
+        toggleConstBtn.addEventListener('click', e => {
+            constGroup.visible = !constGroup.visible;
+            e.currentTarget.classList.toggle('active', constGroup.visible);
+        });
+    }
 
     document.getElementById('controls-hint').innerHTML =
         'drag ruota &nbsp;·&nbsp; scroll zoom &nbsp;·&nbsp; WASD vola &nbsp;·&nbsp; doppio-click avvicinati';
