@@ -5,6 +5,7 @@ import { setupControllers, pollGamepads, pollHover } from './controllers.js';
 import { generateDemoStars }                        from './demo_data.js';
 import { createMilkyWay }                           from './milkyway.js';
 import { createConstellations }                     from './constellations.js';
+import { createEquatorialGrid }                     from './grid.js';
 
 const SPHERE_RADIUS = 500;
 const DATA_URL      = './data/stars.json';
@@ -15,6 +16,7 @@ let scene, camera, renderer, controls, clock;
 let starfield = null;
 let infoPanel = null;
 let constGroup = null;
+let gridGroup  = null;
 
 // ── WASD ──────────────────────────────────────────────────────────────────────
 const keys = {};
@@ -101,6 +103,10 @@ async function init() {
     constGroup.visible = true;
     scene.add(constGroup);
 
+    gridGroup = createEquatorialGrid(SPHERE_RADIUS);
+    gridGroup.visible = false;
+    scene.add(gridGroup);
+
     infoPanel = createInfoPanel();
     scene.add(infoPanel.group);
     infoPanel.group.visible = false;
@@ -145,6 +151,11 @@ async function init() {
             e.currentTarget.classList.toggle('active', constGroup.visible);
         });
     }
+
+    document.getElementById('toggle-grid')?.addEventListener('click', e => {
+        gridGroup.visible = !gridGroup.visible;
+        e.currentTarget.classList.toggle('active', gridGroup.visible);
+    });
 
     document.getElementById('controls-hint').innerHTML =
         'drag ruota &nbsp;·&nbsp; scroll zoom &nbsp;·&nbsp; WASD vola &nbsp;·&nbsp; doppio-click avvicinati';

@@ -9,9 +9,12 @@ const SPECTRAL_COLORS = {
 const VERT_SHADER = `
     attribute float size;
     attribute vec3  aColor;
+    attribute float aMag;
     varying vec3    vColor;
+    varying float   vMag;
     void main() {
         vColor = aColor;
+        vMag   = aMag;
         vec4 mvPos   = modelViewMatrix * vec4(position, 1.0);
         gl_PointSize = size * (900.0 / -mvPos.z);
         gl_Position  = projectionMatrix * mvPos;
@@ -19,15 +22,26 @@ const VERT_SHADER = `
 `;
 
 const FRAG_SHADER = `
-    varying vec3 vColor;
+    varying vec3  vColor;
+    varying float vMag;
     void main() {
-        float d = distance(gl_PointCoord, vec2(0.5));
-        if (d > 0.5) discard;
-        // Core brillante + alone morbido
-        float core  = smoothstep(0.18, 0.0,  d);
-        float glow  = smoothstep(0.50, 0.05, d) * 0.6;
-        float alpha = clamp(core + glow, 0.0, 1.0);
-        gl_FragColor = vec4(vColor * (1.0 + core * 0.8), alpha);
+        vec2  uv = gl_PointCoord - 0.5;
+        float r  = length(uv);
+        if (r > 0.5) discard;
+
+        // Glow multi-strato (Stellarium-style PSF)
+        float core  = smoothstep(0.10, 0.0,  r);
+        float glow1 = smoothstep(0.28, 0.04, r) * 0.55;
+        float glow2 = smoothstep(0.50, 0.18, r) * 0.25;
+
+        // Raggi di diffrazione per stelle brillanti (mag < 3)
+        float spkStr = clamp((3.0 - vMag) / 4.5, 0.0, 0.85);
+        float spH = smoothstep(0.032, 0.0, abs(uv.y)) * smoothstep(0.5, 0.07, abs(uv.x));
+        float spV = smoothstep(0.032, 0.0, abs(uv.x)) * smoothstep(0.5, 0.07, abs(uv.y));
+        float spike = (spH + spV) * spkStr;
+
+        float alpha = clamp(core + glow1 + glow2 + spike, 0.0, 1.0);
+        gl_FragColor = vec4(vColor * (1.0 + core * 1.6 + spike * 0.9), alpha);
     }
 `;
 
@@ -47,6 +61,7 @@ export function createStarfield(stars, radius) {
     const nPos    = new Float32Array(nCount * 3);
     const nColors = new Float32Array(nCount * 3);
     const nSizes  = new Float32Array(nCount);
+    const nMags   = new Float32Array(nCount);
 
     normalStars.forEach((s, i) => {
         const v = new THREE.Vector3(s.x, s.y, s.z).multiplyScalar(radius);
@@ -54,12 +69,14 @@ export function createStarfield(stars, radius) {
         const c = new THREE.Color(SPECTRAL_COLORS[s.spect] ?? 0xffffff);
         nColors[i*3] = c.r; nColors[i*3+1] = c.g; nColors[i*3+2] = c.b;
         nSizes[i] = Math.max(1.0, Math.min(9.0, 7.5 - s.mag)) * 3.2;
+        nMags[i]  = s.mag ?? 5.0;
     });
 
     const nGeo = new THREE.BufferGeometry();
     nGeo.setAttribute('position', new THREE.BufferAttribute(nPos,    3));
     nGeo.setAttribute('aColor',   new THREE.BufferAttribute(nColors, 3));
     nGeo.setAttribute('size',     new THREE.BufferAttribute(nSizes,  1));
+    nGeo.setAttribute('aMag',     new THREE.BufferAttribute(nMags,   1));
 
     const normalPoints = new THREE.Points(nGeo, new THREE.ShaderMaterial({
         vertexShader: VERT_SHADER, fragmentShader: FRAG_SHADER,
