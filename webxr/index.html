@@ -52,12 +52,27 @@
         #legend {
             position: absolute; bottom: 90px; left: 26px;
             font-size: 11px; color: rgba(120,130,150,0.7);
+            pointer-events: auto; user-select: none;
         }
         #legend .dot {
             display: inline-block; width: 8px; height: 8px;
             border-radius: 50%; margin-right: 6px; vertical-align: middle;
         }
         #legend .row { margin: 4px 0; }
+        #legend .filter-btn {
+            cursor: pointer; padding: 3px 8px 3px 4px;
+            border-radius: 5px; transition: background 0.15s, color 0.15s;
+            border: 1px solid transparent;
+        }
+        #legend .filter-btn:hover { background: rgba(255,255,255,0.07); color: rgba(180,195,220,0.9); }
+        #legend .filter-btn.active {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+        #legend .divider { border-top: 1px solid rgba(255,255,255,0.08); margin: 7px 0; }
+        #legend .btn-reset { color: rgba(120,130,150,0.55); font-size: 10px; }
+        #legend .btn-const { color: rgba(100,160,210,0.7); }
 
         #vr-btn {
             position: absolute; bottom: 28px; left: 50%;
@@ -99,9 +114,12 @@
         </div>
 
         <div id="legend">
-            <div class="row"><span class="dot" style="background:#FFD700"></span>1 esopianeta</div>
-            <div class="row"><span class="dot" style="background:#FF8C00"></span>2–3 esopianeti</div>
-            <div class="row"><span class="dot" style="background:#FF3300"></span>4+ esopianeti</div>
+            <div class="row filter-btn" data-filter="1"><span class="dot" style="background:#FFD700"></span>1 esopianeta</div>
+            <div class="row filter-btn" data-filter="2"><span class="dot" style="background:#FF8C00"></span>2–3 esopianeti</div>
+            <div class="row filter-btn" data-filter="3"><span class="dot" style="background:#FF3300"></span>4+ esopianeti</div>
+            <div class="divider"></div>
+            <div class="row filter-btn btn-reset" id="filter-reset">✕ mostra tutto</div>
+            <div class="row filter-btn btn-const" id="toggle-const">◎ costellazioni</div>
         </div>
 
         <div id="controls-hint">
