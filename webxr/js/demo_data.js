@@ -1,4 +1,4 @@
-function raDecToXYZ(ra_deg, dec_deg) {
+export function raDecToXYZ(ra_deg, dec_deg) {
     const ra  = ra_deg  * Math.PI / 180;
     const dec = dec_deg * Math.PI / 180;
     return { x: Math.cos(dec)*Math.cos(ra), y: Math.sin(dec), z: -Math.cos(dec)*Math.sin(ra) };

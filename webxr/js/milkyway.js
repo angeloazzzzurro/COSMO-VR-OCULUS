@@ -7,7 +7,7 @@ const M = [
     [-0.4838350155,  0.7469822445,  0.4559837762]
 ];
 
-function galToEq(l_deg, b_deg) {
+export function galToEq(l_deg, b_deg) {
     const l  = l_deg * Math.PI / 180;
     const b  = b_deg * Math.PI / 180;
     const gx = Math.cos(b) * Math.cos(l);
