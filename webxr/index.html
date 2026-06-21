@@ -87,6 +87,34 @@
         #vr-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); }
         #vr-btn:disabled { opacity: 0.3; cursor: default; }
 
+        #hands-btn {
+            position: absolute; bottom: 28px; right: 26px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(200,210,255,0.85); font-size: 13px;
+            letter-spacing: 2px; cursor: pointer; border-radius: 6px;
+            pointer-events: auto; transition: all 0.2s;
+            font-family: 'Courier New', monospace;
+        }
+        #hands-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); }
+        #hands-btn:disabled { opacity: 0.3; cursor: default; }
+
+        #hands-preview {
+            position: absolute; bottom: 80px; right: 26px;
+            width: 160px; height: 120px; border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: none;
+        }
+
+        #hand-cursor {
+            position: absolute; width: 22px; height: 22px;
+            margin: -11px 0 0 -11px; border-radius: 50%;
+            border: 2px solid rgba(255,215,0,0.9);
+            display: none; pointer-events: none; z-index: 20;
+        }
+        #hand-cursor.pinch { background: rgba(255,215,0,0.45); }
+
         #loading {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -128,6 +156,9 @@
         </div>
 
         <button id="vr-btn">ENTRA IN VR</button>
+        <button id="hands-btn">✋ MANI: OFF</button>
+        <canvas id="hands-preview" width="160" height="120"></canvas>
+        <div id="hand-cursor"></div>
     </div>
 
     <div id="loading">CARICAMENTO COSMO...</div>
@@ -140,6 +171,6 @@
         }
     }
     </script>
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/main.js?v=hands4"></script>
 </body>
 </html>

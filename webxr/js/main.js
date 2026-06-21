@@ -6,6 +6,7 @@ import { generateDemoStars }                        from './demo_data.js';
 import { createMilkyWay }                           from './milkyway.js';
 import { createConstellations }                     from './constellations.js';
 import { createEquatorialGrid }                     from './grid.js';
+import { setupHandTracking }                        from './hands.js';
 
 const SPHERE_RADIUS = 500;
 const DATA_URL      = './data/stars.json';
@@ -113,6 +114,7 @@ async function init() {
 
     setupControllers(renderer, scene, () => starfield, onStarSelected);
     initVRButton();
+    initHandControl();
 
     renderer.domElement.addEventListener('click',     onMouseClick);
     renderer.domElement.addEventListener('dblclick',  onMouseDblClick);
@@ -158,7 +160,7 @@ async function init() {
     });
 
     document.getElementById('controls-hint').innerHTML =
-        'drag ruota &nbsp;·&nbsp; scroll zoom &nbsp;·&nbsp; WASD vola &nbsp;·&nbsp; doppio-click avvicinati';
+        'drag ruota &nbsp;·&nbsp; scroll zoom &nbsp;·&nbsp; WASD vola &nbsp;·&nbsp; doppio-click avvicinati &nbsp;·&nbsp; ✋ mani: indice punta, pinch seleziona, pugno ruota, due mani zoom';
 
     window.addEventListener('resize', onResize);
     renderer.setAnimationLoop(animate);
@@ -297,6 +299,59 @@ function onMouseMove(e) {
     const hit = doRaycast(e);
     const s   = starfield.setHover(hit);
     renderer.domElement.style.cursor = s ? 'pointer' : 'default';
+}
+
+// ── Controllo mani via webcam ─────────────────────────────────────────────────
+function rotateView(yaw, pitch) {
+    if (!controls.enabled) return;
+    const offset = controls.target.clone().sub(camera.position);
+    offset.applyAxisAngle(camera.up, yaw);
+    const right   = new THREE.Vector3().crossVectors(offset, camera.up).normalize();
+    const pitched = offset.clone().applyAxisAngle(right, pitch);
+    const ang     = pitched.angleTo(camera.up);
+    if (ang > 0.15 && ang < Math.PI - 0.15) offset.copy(pitched);
+    controls.target.copy(camera.position).add(offset);
+}
+
+function zoomView(amount) {
+    if (!controls.enabled) return;
+    const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd);
+    const next = camera.position.clone().addScaledVector(fwd, amount);
+    if (next.length() > 450) return;
+    camera.position.copy(next);
+    controls.target.addScaledVector(fwd, amount);
+}
+
+function initHandControl() {
+    const btn    = document.getElementById('hands-btn');
+    const cursor = document.getElementById('hand-cursor');
+    if (!btn) return;
+    if (!navigator.mediaDevices?.getUserMedia) { btn.disabled = true; btn.textContent = '✋ NON SUPPORTATO'; return; }
+
+    const ht = setupHandTracking({
+        preview:  document.getElementById('hands-preview'),
+        onStatus: t => btn.textContent = `✋ ${t}`,
+        onCursor: c => {
+            if (!c) {
+                cursor.style.display = 'none';
+                starfield?.setHover(null);
+                return;
+            }
+            cursor.style.display = 'block';
+            cursor.style.left = c.x + 'px';
+            cursor.style.top  = c.y + 'px';
+            cursor.classList.toggle('pinch', c.pinching);
+            starfield?.setHover(doRaycast({ clientX: c.x, clientY: c.y }));
+        },
+        onPinchStart: (x, y) => {
+            const hit = doRaycast({ clientX: x, clientY: y });
+            if (hit) { const s = starfield.getStarByHit(hit); if (s) onStarSelected(s); }
+        },
+        onRotate: (dx, dy) => rotateView(dx * 2.5, dy * 2.0),
+        onZoom:   d => zoomView(d * 600),
+    });
+
+    btn.addEventListener('click', () => ht.toggle());
 }
 
 // ── VR Button ─────────────────────────────────────────────────────────────────
