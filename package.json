@@ -1,0 +1,13 @@
+{
+  "name": "cosmo-vr-oculus",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "three": "^0.170.0",
+    "vitest": "^2.0.0"
+  }
+}

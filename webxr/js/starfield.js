@@ -45,7 +45,7 @@ const FRAG_SHADER = `
     }
 `;
 
-function planetColor(n) {
+export function planetColor(n) {
     if (n === 1) return new THREE.Color(0xFFD700);
     if (n <= 3)  return new THREE.Color(0xFF8C00);
     return           new THREE.Color(0xFF3300);

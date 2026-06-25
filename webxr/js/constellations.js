@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-function rd(ra_deg, dec_deg, r) {
+export function rd(ra_deg, dec_deg, r) {
     const ra  = ra_deg  * Math.PI / 180;
     const dec = dec_deg * Math.PI / 180;
     return new THREE.Vector3(
