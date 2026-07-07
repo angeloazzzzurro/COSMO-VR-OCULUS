@@ -133,6 +133,10 @@ export function setupHandTracking(cb) {
         processHands(hands);
     }
 
+    // stato gesto corrente per il preview
+    let currentGesture = 'none';   // 'none' | 'point' | 'pinch' | 'fist' | 'zoom'
+    let pinchProgress = 0;         // 0–1, quanto vicino al pinch
+
     function drawPreview(hands) {
         if (!pctx) return;
         const w = preview.width, h = preview.height;
@@ -140,6 +144,8 @@ export function setupHandTracking(cb) {
         pctx.translate(w, 0); pctx.scale(-1, 1);
         pctx.drawImage(video, 0, 0, w, h);
         pctx.restore();
+
+        // punti mano
         pctx.fillStyle = '#FFD700';
         for (const lm of hands)
             for (const p of lm) {
@@ -147,11 +153,36 @@ export function setupHandTracking(cb) {
                 pctx.arc((1 - p.x) * w, p.y * h, 2, 0, Math.PI * 2);
                 pctx.fill();
             }
+
+        // badge gesto in basso
+        if (!hands.length) { currentGesture = 'none'; pinchProgress = 0; }
+        const labels = { none: '', point: '👆 PUNTA', pinch: '🤏 SELEZIONA', fist: '✊ RUOTA', zoom: '🔍 ZOOM' };
+        const label  = labels[currentGesture];
+        if (label) {
+            pctx.fillStyle = 'rgba(0,0,0,0.55)';
+            pctx.fillRect(0, h - 22, w, 22);
+            pctx.fillStyle = currentGesture === 'pinch' ? '#FFD700' : '#fff';
+            pctx.font = '11px monospace';
+            pctx.textAlign = 'center';
+            pctx.fillText(label, w / 2, h - 7);
+            pctx.textAlign = 'left';
+        }
+
+        // barra avanzamento pinch
+        if (pinchProgress > 0.05) {
+            const bw = w * 0.7, bx = (w - bw) / 2, by = h - 26;
+            pctx.fillStyle = 'rgba(255,255,255,0.15)';
+            pctx.fillRect(bx, by, bw, 3);
+            const col = pinchProgress > 0.85 ? '#FFD700' : `hsl(${40 + pinchProgress * 20},100%,60%)`;
+            pctx.fillStyle = col;
+            pctx.fillRect(bx, by, bw * Math.min(pinchProgress, 1), 3);
+        }
     }
 
     function processHands(hands) {
         if (!hands.length) {
             pinching = false; fistPrev = null; zoomPrev = null; sx = sy = null;
+            currentGesture = 'none'; pinchProgress = 0;
             cb.onCursor?.(null);
             return;
         }
@@ -164,6 +195,7 @@ export function setupHandTracking(cb) {
             }
             zoomPrev = d;
             fistPrev = null; pinching = false; sx = sy = null;
+            currentGesture = 'zoom'; pinchProgress = 0;
             cb.onCursor?.(null);
             return;
         }
@@ -182,6 +214,7 @@ export function setupHandTracking(cb) {
             }
             fistPrev = { x: cx, y: cy };
             pinching = false; sx = sy = null;
+            currentGesture = 'fist'; pinchProgress = 0;
             cb.onCursor?.(null);
             return;
         }
@@ -202,7 +235,11 @@ export function setupHandTracking(cb) {
         if (!pinching && ratio < PINCH_ON)      pinching = true;
         else if (pinching && ratio > PINCH_OFF) pinching = false;
 
-        cb.onCursor?.({ x: sx, y: sy, pinching });
+        // progresso pinch: 0 = mano aperta (ratio≈1), 1 = pinch completo (ratio≤PINCH_ON)
+        pinchProgress = Math.max(0, Math.min(1, (0.75 - ratio) / (0.75 - PINCH_ON)));
+        currentGesture = pinching ? 'pinch' : 'point';
+
+        cb.onCursor?.({ x: sx, y: sy, pinching, progress: pinchProgress });
         if (pinching && !was) cb.onPinchStart?.(sx, sy);
     }
 
