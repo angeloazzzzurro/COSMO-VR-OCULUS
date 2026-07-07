@@ -36,6 +36,9 @@
             border: 1px solid rgba(255,180,0,0.2);
             border-radius: 5px; font-size: 12px; color: #FFD700;
         }
+        #info-orbital .row { display: flex; justify-content: space-between; }
+        #info-orbital .row span:last-child { color: #ddd; }
+
         #star-info .close-btn {
             position: absolute; top: 10px; right: 12px;
             color: #555; cursor: pointer; font-size: 16px;
@@ -139,6 +142,9 @@
                 <div id="info-planet-count"></div>
                 <div id="info-planet-score" style="color:#aaa;font-size:11px;margin-top:3px"></div>
             </div>
+            <div id="info-orbital-wrap" style="display:none;margin-top:8px;border-top:1px solid rgba(255,180,0,0.15);padding-top:8px">
+                <div id="info-orbital" style="font-size:11px;color:#aaa;display:flex;flex-direction:column;gap:3px"></div>
+            </div>
         </div>
 
         <div id="legend">
@@ -171,6 +177,6 @@
         }
     }
     </script>
-    <script type="module" src="js/main.js?v=hands4"></script>
+    <script type="module" src="js/main.js?v=hands6"></script>
 </body>
 </html>

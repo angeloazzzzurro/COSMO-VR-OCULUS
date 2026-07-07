@@ -256,9 +256,22 @@ function onStarSelected(star) {
             `${star.n_planets} esopianeta${star.n_planets > 1 ? 'i' : ''}`;
         document.getElementById('info-planet-score').textContent =
             star.koi_score != null ? `Confidence: ${(star.koi_score * 100).toFixed(1)}%` : '';
+        // dati orbitali reali Kepler
+        const rows = [
+            ['Periodo orbitale', star.period != null ? `${star.period.toFixed(2)} giorni` : null],
+            ['Raggio pianeta',   star.prad   != null ? `${star.prad.toFixed(2)} R⊕` : null],
+            ['Temp. equilibrio', star.teq    != null ? `${Math.round(star.teq)} K` : null],
+            ['Insolazione',      star.insol  != null ? `${star.insol.toFixed(2)} S⊕` : null],
+        ].filter(([, v]) => v != null);
+        const tbody = document.getElementById('info-orbital');
+        tbody.innerHTML = rows.map(([k, v]) =>
+            `<div class="row"><span>${k}</span><span>${v}</span></div>`
+        ).join('');
+        document.getElementById('info-orbital-wrap').style.display = rows.length ? 'block' : 'none';
         badge.style.display = 'block';
     } else {
         badge.style.display = 'none';
+        document.getElementById('info-orbital-wrap').style.display = 'none';
     }
     panel.style.display = 'block';
 }
@@ -341,6 +354,15 @@ function initHandControl() {
             cursor.style.left = c.x + 'px';
             cursor.style.top  = c.y + 'px';
             cursor.classList.toggle('pinch', c.pinching);
+            // colore e dimensione reattivi al progresso del pinch
+            const p = c.progress ?? 0;
+            const size = 22 - p * 8;   // si restringe avvicinandosi al pinch
+            const opacity = 0.7 + p * 0.3;
+            const hue = 45 - p * 25;   // oro → arancione
+            cursor.style.width  = size + 'px';
+            cursor.style.height = size + 'px';
+            cursor.style.margin = `-${size/2}px 0 0 -${size/2}px`;
+            cursor.style.borderColor = `hsla(${hue},100%,55%,${opacity})`;
             starfield?.setHover(doRaycast({ clientX: c.x, clientY: c.y }));
         },
         onPinchStart: (x, y) => {
